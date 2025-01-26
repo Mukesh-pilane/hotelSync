@@ -1,0 +1,44 @@
+@import "../../../assets/variables/variables";
+.main_container {
+  display: flex;
+  .rightSideContainer {
+    width: 100%;
+    position: relative;
+    height: 100vh;
+    overflow-y: hidden;
+    background-color: #f2f2f3;
+    padding: 0px 20px 20px 20px;
+    .outlet_content {
+      width: 100%;
+      // background-color: white;
+      border-radius: 10px;
+      padding: 7px 15px;
+      overflow-x: hidden !important;
+      overflow-y: auto;
+      height: calc(100vh - 15%);
+      &::-webkit-scrollbar {
+        width: 9px;
+        /* Width of the scrollbar */
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Color of the scrollbar track */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $primary-color; /* Color of the scrollbar thumb */
+        border-radius: 10px; /* Rounded corners */
+        border: 3px solid transparent; /* Adds space around the thumb */
+        background-clip: padding-box; /* To show the transparent border */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        z-index: 200000 !important; /* Max z-index for the scrollbar thumb */
+      }
+
+      &::-webkit-scrollbar-track {
+        z-index: 9998 !important; /* Max z-index for the scrollbar track */
+      }
+    }
+  }
+}
