@@ -25,7 +25,18 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+
+server.listen(port,()=>{
+  console.log(`Server Listening at PORT ${port}`)
+});
+
+process.on('uncaughtException', (err) => {
+  console.log(`UncaughtException Erorr \n${err}`)
+})
+process.on('unhandledRejection', (err) => {
+  console.log(`unhandledRejection Erorr \n${err}`)
+})
+
 server.on('error', onError);
 server.on('listening', onListening);
 

@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const router = require("express").Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const {errorWrapper} = require('../utils/errorWrapper');
+const checkAuth = require('../middlewares/checkAuth');
+const checkPermission = require('../middlewares/checkPermission');
+const { validateAddUser } = require('../validators/userValidation');
+const { validationError } = require('../utils/validationError');
+const { insertUser, fetchUsers } = require('../controllers/user');
+
+router.post('/', checkAuth, checkPermission, validateAddUser, validationError, errorWrapper(insertUser));
+router.get('/', checkAuth, checkPermission, errorWrapper(fetchUsers));
 
 module.exports = router;
