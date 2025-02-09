@@ -1,15 +1,12 @@
 export const getApiParams = (payload) => {
-    if(!payload){
+    if (!payload) {
         return ""
     }
-    const key = Object.keys(payload)
-    let url = []
-    key.forEach((k) => {
-        if(payload[k]){
-            url.push(`${k}=${payload[k]}`)
+    const params = {};
+    for (let key in payload) {
+        if (payload[key] !== null && payload[key] !== undefined && payload[key] !== '') {
+            params[key] = payload[key];
         }
-    })
-    url = url.join('&')
-    url = url ? `?${url}` : ''
-    return url
+    }
+    return params;
 }
