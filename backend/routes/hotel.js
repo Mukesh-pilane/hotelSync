@@ -7,7 +7,7 @@ const { validateAddHotel } = require('../validators/validateAddHotel');
 const { validationError } = require('../utils/validationError');
 const { insertHotel, fetchHotels } = require('../controllers/hotel');
 
-router.post('/',/* checkAuth, checkPermission,*/ validateAddHotel, validationError, errorWrapper(insertHotel));
-router.get('/', checkAuth, checkPermission, errorWrapper(fetchHotels));
+router.post('/', checkAuth,/* checkPermission,*/ validateAddHotel, validationError, errorWrapper(insertHotel));
+router.get('/', checkAuth,/* checkPermission,*/ errorWrapper(fetchHotels));
 
 module.exports = router;

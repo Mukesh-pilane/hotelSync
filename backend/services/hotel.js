@@ -14,11 +14,12 @@ exports.addHotel = async (body) => {
     };
 }
 
-exports.retriveHotels = async (body) => {
+exports.retriveHotels = async () => {
     const hotelData = await db.hotel.findAll({
         where: {
-            deleteAt: null
-        }
+            deleted_at: null
+        },
+        attributes: ["name", "address"]
     });
 
     return {  

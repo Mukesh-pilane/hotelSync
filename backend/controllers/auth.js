@@ -7,9 +7,9 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-    const { email } = req.body;
-    const accesstoken = req.header("Authorization");
-    const result = await logoutService(email, accesstoken);
+    const { mobile } = req.body;
+    const accesstoken = req.headers.authorization.split(' ')[1];
+    const result = await logoutService(mobile, accesstoken);
     res.status(200).send(result);
 }
 

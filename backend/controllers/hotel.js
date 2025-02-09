@@ -7,8 +7,6 @@ exports.insertHotel = async (req, res) => {
 }
 
 exports.fetchHotels = async (req, res) => {
-    const { email } = req.body;
-    const accesstoken = req.header("Authorization");
-    const result = await retriveHotels(email, accesstoken);
+    const result = await retriveHotels();
     res.status(200).send(result);
 }
