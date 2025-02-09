@@ -4,8 +4,8 @@ const { sequelize, Sequelize } = require('../models');
 const sequelizeConnectionType = process.env.sequelizeConnectionType || 'sync';
 
 const syncOptions = {
-  alter: sequelizeConnectionType === 'sync',
-  force: true
+  alter: sequelizeConnectionType === 'alter',
+  force: false
 };
 
 function DatabaseConnect() {

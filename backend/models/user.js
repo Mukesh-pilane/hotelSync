@@ -1,4 +1,4 @@
-const { hashSync, compare } = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataTypes) => {
   const user = sequelize.define('user', {
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     mobile: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       field: 'mobile',
       allowNull: false,
     },

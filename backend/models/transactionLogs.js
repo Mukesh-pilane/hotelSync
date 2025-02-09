@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const customerTokenPoints = sequelize.define('customer_token_points', {
+    const transactionLogs = sequelize.define('transaction_logs', {
       customerId: {
         type: DataTypes.INTEGER,
         field: 'customer_id',
@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
         field: 'hotel_id',
         allowNull: false,
       },
-      points: {
+      amount: {
         type: DataTypes.INTEGER,
-        field: 'points',
+        field: 'amount',
         allowNull: false,
       },
       deleted_at: {
@@ -23,13 +23,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       paranoid: true,
       underscored: true,
-      tableName: 'customer_token_points',
+      tableName: 'transaction_logs',
     });
 
-    customerTokenPoints.associate = (models) => {
-      customerTokenPoints.belongsTo(models.customer, { foreignKey: 'customer_id'});
-      customerTokenPoints.belongsTo(models.hotel, { foreignKey: 'hotel_id' } );
+    transactionLogs.associate = (models) => {
+        transactionLogs.belongsTo(models.customer, { foreignKey: 'customer_id'});
+        transactionLogs.belongsTo(models.hotel, { foreignKey: 'hotel_id' } );
     };
 
-    return customerTokenPoints;
+    return transactionLogs;
 };

@@ -4,11 +4,20 @@ const { DataNotFoundError, BadRequestError } = require('../utils/customError');
 exports.createUser = async (body) => {
     const userExist = await db.user.findOne({
         where : {
-            email : body.email
+            mobile : body.mobile
         }
     });
     if(userExist){
-        throw new BadRequestError(`User with email ${email} altready exist`)
+        throw new BadRequestError(`User with phone number ${body.mobile} altready exist`)
+    }
+    let res = await db.role.findAll();
+    const roleExist = await db.role.findOne({
+        where: {
+            id: body.roleId
+        }
+    });
+    if(!roleExist){
+        throw new BadRequestError("Role Id Is Invalid.")
     }
     const insertUser = await db.user.create(body);
     if (!insertUser) {
@@ -25,7 +34,17 @@ exports.fetchAllUsers = async () => {
         where: {
             deletedAt: null
         },
-        attributes: ["name", "email", "roleId"]
+        include:[
+            {
+                model: db.role,
+                attributes: ['name']
+            },
+            {
+                model: db.hotel,
+                attributes: ['name']
+            }
+        ],
+        attributes: ["first_name", "last_name", "mobile"]
     });
     if (!fetchUsers) {
         throw new DataNotFoundError();
