@@ -13,17 +13,22 @@ exports.logInService = async (body) => {
             where: { 
                 mobile,
                 deleted_at : null
-            }
+            },
+            include: [
+                {
+                    model: db.role,
+                    attributes: ['name']
+                },
+                {
+                    model: db.hotel,
+                    attributes: ['name']
+                }
+            ]
         });
+
     if (!getUserInfo) {
-        throw new ValidationError(`User with Mobile Number ${mobile} Not Found.`);
+        throw new ValidationError(`User with Mobile Number ${body.mobile} Not Found.`);
     }
-    const userRole = await db.role.findOne({
-        where: {
-            id : getUserInfo.role_id,
-            deletedAt : null
-        }
-    });
     
     const comparePassword = await bcrypt.compare(body.password, getUserInfo.password);
     if (!comparePassword) {
@@ -32,7 +37,8 @@ exports.logInService = async (body) => {
     const data = {
         id: getUserInfo.id,
         mobile: mobile,
-        role : userRole.name
+        role : getUserInfo.role?.name,
+        hotel: getUserInfo.hotel?.name
     }
     const accessToken = generateToken(data);
     const ifTokenExist = await db.user_token.findOne({ where: { user_id: getUserInfo.id }});
@@ -46,14 +52,15 @@ exports.logInService = async (body) => {
     }
     else{
         await db.user_token.create({ 
-            user_id: getUserInfo.id, 
+            userId: getUserInfo.id, 
             token: accessToken 
         });
     }
     return {
         status : 200,
         message : "Logged In successfully",
-        role : userRole.name,
+        role : getUserInfo.role?.name,
+        hotel: getUserInfo.hotel?.name,
         token : accessToken
     }
 }

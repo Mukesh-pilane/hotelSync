@@ -4,18 +4,24 @@ const passwordRegrex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 exports.validateAddUser = [
-  body("name")
+  body("firstName")
     .isString()
-    .withMessage("Name should be a string")
+    .withMessage("firstName should be a string")
     .isLength({ min: 3, max: 50 })
-    .withMessage("Name should be 3 to 50 characters long"),
+    .withMessage("firstName should be 3 to 50 characters long"),
+
+  body("lastName")
+    .isString()
+    .withMessage("lastName should be a string")
+    .isLength({ min: 3, max: 50 })
+    .withMessage("lastName should be 3 to 50 characters long"),
 
   body("mobile")
     .notEmpty()
     .withMessage("Mobile Number is required")
     .bail()
-    .isNumeric()
-    .withMessage('Mobile number must be a number')
+    .isString()
+    .withMessage('Mobile number must be a string')
     .isLength({ min: 10, max:10 })
     .withMessage("Mobile number must be exactly 10 digits"),
 
@@ -29,6 +35,13 @@ exports.validateAddUser = [
     ),
 
   body("roleId")
+    .notEmpty()
+    .withMessage("roleId is required")
+    .bail()
+    .isNumeric()
+    .withMessage("roleId should be numeric"),
+  
+  body("hotelId")
     .notEmpty()
     .withMessage("roleId is required")
     .bail()

@@ -25,7 +25,10 @@ app.use(function(err, req, res, next) {
   console.log(err);
   // render the error page
   res.status(err.statusCode  || 500);
-  res.render('error');
+  res.send({
+    status: err.statusCode || 500,
+    message: err.message
+  });
 });
 
 module.exports = app;
