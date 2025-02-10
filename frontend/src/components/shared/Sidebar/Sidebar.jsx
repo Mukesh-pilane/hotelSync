@@ -2,11 +2,12 @@ import {
   IconAdjustments,
   IconUsersGroup
 } from '@tabler/icons-react';
-import { Code, Group, ScrollArea } from '@mantine/core';
+import { Avatar, Box, Code, Flex, Group, ScrollArea, Text } from '@mantine/core';
 import LinksGroup from './LinksGroup';
 import UserButton from './UserButton';
-import { Logo } from './Logo';
 import classes from './Sidebar.module.css';
+import HotelSync from '../../../assets/svg/hotelSync';
+import { useAuthStore } from '../../../store/client/authStore';
 
 const mockdata = [
   { label: 'users', icon: IconUsersGroup, link: '/users' },
@@ -20,15 +21,23 @@ const mockdata = [
   },
 ];
 
+
+
 export default function SideBar() {
+  const { userData } = useAuthStore((state) => state);
+
   const links = mockdata.map((item) => <LinksGroup {...item} key={item.label} />);
 
   return (
     <nav className={classes.navbar}>
       <div className={classes.header}>
         <Group justify="space-between">
-          <Logo style={{ width: 120 }} />
-          <Code fw={700}>v3.1.2</Code>
+          <Flex justify="center" align="center" gap={5}>
+            <Avatar color="#6F63E6" radius="50%" style={{ width: 35, height: 35, padding: 5, background: "#6F63E6" }}>
+              <HotelSync style={{ fill: "#6F63E6" }} />
+            </Avatar>
+            <Text size='md' fw={600} c="blue">{userData.hotel.toUpperCase()}</Text>
+          </Flex>
         </Group>
       </div>
 

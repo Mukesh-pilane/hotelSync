@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const cors = require('cors');
 var path = require('path');
 require("./config/connection"); // create db connection
 
@@ -9,6 +10,7 @@ var app = express();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 app.use('/api', indexRouter);
 
