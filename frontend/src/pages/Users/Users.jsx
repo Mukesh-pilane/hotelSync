@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import Table from '../../components/shared/Table/Table'
+import React, { useState, lazy, useMemo } from 'react'
+const Table = lazy(() => import("../../components/shared/Table/Table"))
 import { Button, Paper, Stack } from '@mantine/core'
 import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
 import { useDisclosure } from '@mantine/hooks'
@@ -12,7 +12,6 @@ const data = [
     avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png',
     fname: 'Robert',
     lname: 'Wolfkisser',
-    email: 'rob_wolf@gmail.com',
     mobile: '123-456-7890', // Example mobile number
   },
   {
@@ -20,7 +19,6 @@ const data = [
     avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-7.png',
     fname: 'Jill',
     lname: 'Jailbreaker',
-    email: 'jj@breaker.com',
     mobile: '234-567-8901', // Example mobile number
   },
   {
@@ -28,7 +26,6 @@ const data = [
     avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png',
     fname: 'Henry',
     lname: 'Silkeater',
-    email: 'henry@silkeater.io',
     mobile: '345-678-9012', // Example mobile number
   },
   {
@@ -36,7 +33,6 @@ const data = [
     avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png',
     fname: 'Bill',
     lname: 'Horsefighter',
-    email: 'bhorsefighter@gmail.com',
     mobile: '456-789-0123', // Example mobile number
   },
   {
@@ -44,7 +40,6 @@ const data = [
     avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-10.png',
     fname: 'Jeremy',
     lname: 'Footviewer',
-    email: 'jeremy@foot.dev',
     mobile: '567-890-1234', // Example mobile number
   },
 ];
@@ -55,6 +50,30 @@ const Users = () => {
   const [search, setSearch] = useState("")
   const [opened, { open, close }] = useDisclosure(false);
 
+
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'avatar', // Display avatar image
+        header: 'Avatar',
+        cell: info => <img src={info.getValue()} alt="Avatar" style={{ width: 40, height: 40, borderRadius: '50%' }} />
+      },
+      {
+        accessorKey: 'fname', // First name field
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lname', // Last name field
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'mobile', // Mobile number
+        header: 'Mobile',
+      },
+    ],
+    []
+  );
+  
   return (
     <>
       <Stack>
@@ -67,9 +86,9 @@ const Users = () => {
             </Button>
           }
         />
-        <Paper>
-          <Table data={data}/>
-        </Paper>
+        {/* <Paper> */}
+          <Table columns={columns} data={data}/>
+        {/* </Paper> */}
       </Stack>
       <CustomModal title="User" opened={opened} close={close}>
         <UserForm data={{}} close={close} />

@@ -1,9 +1,9 @@
+// import '@mantine/core/styles.css';
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import '@mantine/core/styles.css';
-import { MantineProvider, createTheme } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 
 import { paths } from './utility/constants';
 
@@ -13,17 +13,13 @@ import NotFound from "./pages/NotFound/NotFound";
 
 
 
-const theme = createTheme({
-  fontFamily: 'Open Sans, sans-serif',
-  primaryColor: 'yellow',
-});
 function App() {
 
   const router = createBrowserRouter([
     ...Object.values(paths?.publicRoutes)?.map((e) => {
       return {
         path: e?.path,
-        element: <PublicRoute component={e?.element} />
+        element: <PublicRoute component={e?.element} /> 
       }
     }),
     ...Object.values(paths?.privateRoutes)?.map((e) => {
@@ -52,7 +48,12 @@ function App() {
 
   return (
     <>
-      <MantineProvider theme={theme}>
+      <MantineProvider
+        withGlobalStyles withNormalizeCSS
+        theme={{
+          fontFamily: 'Open Sans, sans-serif',
+          primaryColor: 'yellow',
+        }}>
         <RouterProvider router={router} />
       </MantineProvider>
     </>

@@ -34,7 +34,11 @@ export const paths = {
                 users:{
                     path: "/users",
                     element: Users, 
-                }
+                },
+                holtels:{
+                    path: "/hotels",
+                    element: Users, 
+                },
             }
         }
     }

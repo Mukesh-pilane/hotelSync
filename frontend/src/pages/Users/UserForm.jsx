@@ -14,7 +14,7 @@ const UserForm = ({ data, close }) => {
         mode: 'uncontrolled',
         initialValues: modifiedData,
         validate: {
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+            mobile: (value) => (/^[6-9]\d{9}$/.test(value) ? null : 'Invalid mobile number'),
         },
     });
 
@@ -39,13 +39,6 @@ const UserForm = ({ data, close }) => {
                     {...form.getInputProps('email')}
                 />
             </SimpleGrid>
-            <TextInput
-                withAsterisk
-                label="Email"
-                placeholder="your@email.com"
-                key={form.key('email')}
-                {...form.getInputProps('email')}
-            />
             <SimpleGrid cols={{ base: 1, sm: 2 }} justify="space-between">
                 <NumberInput
                     withAsterisk
