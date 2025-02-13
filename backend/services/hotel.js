@@ -28,3 +28,18 @@ exports.retriveHotels = async () => {
         data: hotelData
     };
 }
+
+exports.addRange = async () => {
+    const hotelData = await db.hotel.findAll({
+        where: {
+            deleted_at: null
+        },
+        attributes: ["name", "address"]
+    });
+
+    return {  
+        statusCode: 200, 
+        message: 'Hotels Fetched Successfully',
+        data: hotelData
+    };
+}
