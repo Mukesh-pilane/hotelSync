@@ -64,8 +64,25 @@ exports.createCustomer = async (body) => {
     }
 }
 
-exports.retriveCustomers = async (body) => {
-
+exports.retriveCustomers = async (hotelId) => {
+    const customerData = await db.customer.findAll({
+        where: {
+            belongsToHotel: hotelId,
+            deletedAt: null
+        },
+        include: [
+            {
+                model: db.customer_token_points,
+                attributes: ['points']
+            }
+        ],
+        attributes: ['id', 'firstName', "lastName", "mobile", "documents"]
+    });
+    return { 
+        statusCode: 200, 
+        message: 'Customer Data Fetched Successfully',
+        data: customerData
+    }
 }
 
 exports.addTransaction = async (body) => {

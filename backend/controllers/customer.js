@@ -1,7 +1,7 @@
 const { retriveCustomers, createCustomer, addTransaction } = require('../services/customer');
 
 exports.fetchCustomer = async (req, res) => {
-    const hotelId = req.userData.hotelId;
+    const hotelId = req.userData.hotel;
     const result = await retriveCustomers(hotelId);
     res.status(200).send(result);
 }
