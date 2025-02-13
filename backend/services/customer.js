@@ -1,6 +1,6 @@
 const db = require('../models');
 const { DataNotFoundError, BadRequestError } = require('../utils/customError');
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 
 exports.createCustomer = async (body) => {
     const { belongsToHotel, amount } = body;
@@ -37,13 +37,13 @@ exports.createCustomer = async (body) => {
         },
         order: [['startAmount', 'desc']]
     });
-    if(!tokenRange){ 
+    if(!tokenRange){  // if amount if greater than every range take maximim range
         tokenRange = await db.token_range.findOne({
             where: {
-                startAmount: { [Op.lte]: amount },
                 deletedAt: null
             },
-            order: [['startAmount', 'desc']]
+            order: [['startAmount', 'desc']],
+            limit: 1
         });
     }
 
@@ -78,27 +78,31 @@ exports.addTransaction = async (body) => {
     // get amount token points
     let tokenRange = await db.token_range.findOne({
         where: {
-            startAmount: { [Op.gte]: amount },
-            endAmount: { [Op.lte]: amount },
-            deleteAt: null
+            startAmount: { [Op.lte]: amount },
+            endAmount: { [Op.gte]: amount },
+            deletedAt: null
         },
-        order: [startAmount, 'desc']
+        order: [['startAmount', 'desc']]
     });
-
-    if(!tokenRange){ 
+    if(!tokenRange){  // if amount if greater than every range take maximim range
         tokenRange = await db.token_range.findOne({
             where: {
-                startAmount: { [Op.gte]: amount },
-                deleteAt: null
+                deletedAt: null
             },
-            order: [startAmount, 'desc']
+            order: [['startAmount', 'desc']],
+            limit: 1
         });
     }
-    const tokenPoints = tokenRange.tokenPoints || 0;
+
+    // totel token points
+    const tokenPoints = tokenRange?.tokenPoints || 0;
+
     const updateTokenPoints = await db.customer_token_points.update(
         { points: Sequelize.literal(`points + ${tokenPoints}`) },
         { where: { customerId }}
     );
+
+    // sms logic
     if(!updateTokenPoints){
         throw new BadRequestError("Error While Adding Transaction Logs.");
     }

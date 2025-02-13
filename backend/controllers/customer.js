@@ -15,7 +15,7 @@ exports.insertCustomer = async (req, res) => {
 
 exports.addTransaction = async (req, res) => {
     const body = req.body;
-    body.hotelId = req.userData.hotelId;
+    body.hotelId = req.userData.hotel;
     const result = await addTransaction(body);
     res.status(200).send(result);
 }

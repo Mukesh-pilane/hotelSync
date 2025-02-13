@@ -9,6 +9,6 @@ const { insertCustomer, fetchCustomer, addTransaction } = require('../controller
 
 router.post('/', checkAuth,/* checkPermission,*/ validateAddCustomer, validationError, errorWrapper(insertCustomer));
 router.get('/', checkAuth,/* checkPermission,*/ errorWrapper(fetchCustomer));
-router.post('/transaction', checkAuth, checkPermission, validatiAddTransaction, validationError, errorWrapper(addTransaction));
+router.post('/transaction', checkAuth,/* checkPermission,*/ validatiAddTransaction, validationError, errorWrapper(addTransaction));
 
 module.exports = router;
