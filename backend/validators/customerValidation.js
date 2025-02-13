@@ -29,5 +29,28 @@ exports.validateAddCustomer = [
     .isNumeric()
     .withMessage("Hotel Id should be numeric"),
   
+  body("amount")
+    .notEmpty()
+    .withMessage("amount is required")
+    .bail()
+    .isNumeric()
+    .withMessage("amount should be numeric"),
+  
+];
+
+exports.validatiAddTransaction = [
+  body("customerId")
+    .notEmpty()
+    .withMessage("customer id is required")
+    .bail()
+    .isNumeric()
+    .withMessage("customer Id should be numeric"),
+
+  body("amount")
+    .notEmpty()
+    .withMessage("amount is required")
+    .bail()
+    .isNumeric()
+    .withMessage("amount should be numeric"),
 ];
 

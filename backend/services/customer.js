@@ -1,20 +1,20 @@
 const db = require('../models');
 const { DataNotFoundError, BadRequestError } = require('../utils/customError');
+const { Op } = require('sequelize');
 
 exports.createCustomer = async (body) => {
-    const { hotelId, amount } = body;
+    const { belongsToHotel, amount } = body;
     const hotelExist = await db.hotel.findOne({
         where:{
-            id: hotelId,
+            id: belongsToHotel,
             deletedAt: null
         }
     });
     if(!hotelExist){
-        throw new BadRequestError(`Hotel with the id ${hotelId} does not exist`);
+        throw new BadRequestError(`Hotel with the id ${belongsToHotel} does not exist`);
     }
 
-    body.createdBy = req.userData.id;
-    const addCustomer = await db.create(body);
+    const addCustomer = await db.customer.create(body);
     if(!addCustomer){
         throw new BadRequestError("Error While Adding Customer");
     }
@@ -22,18 +22,37 @@ exports.createCustomer = async (body) => {
     // add transaction
     const transactionObject = {
         customerId: addCustomer.id,
-        hotelId,
+        hotelId: belongsToHotel,
         amount
     }
 
-    await db.transactionLogs.create(transactionObject);
+    await db.transaction_logs.create(transactionObject);
 
-    // get registration token points
-    const tokenPoints = hotelExist.base_token_points;
+    // get amount token points
+    let tokenRange = await db.token_range.findOne({
+        where: {
+            startAmount: { [Op.lte]: amount },
+            endAmount: { [Op.gte]: amount },
+            deletedAt: null
+        },
+        order: [['startAmount', 'desc']]
+    });
+    if(!tokenRange){ 
+        tokenRange = await db.token_range.findOne({
+            where: {
+                startAmount: { [Op.lte]: amount },
+                deletedAt: null
+            },
+            order: [['startAmount', 'desc']]
+        });
+    }
+
+    // totel token points
+    const tokenPoints = (hotelExist?.baseTokenPoints + tokenRange?.tokenPoints ) || 0;
 
     await db.customer_token_points.create({
         customerId: addCustomer.id,
-        hotelId,
+        hotelId: belongsToHotel,
         points: tokenPoints 
     });
 
@@ -47,4 +66,44 @@ exports.createCustomer = async (body) => {
 
 exports.retriveCustomers = async (body) => {
 
+}
+
+exports.addTransaction = async (body) => {
+    const { customerId, amount } = body;
+    const insertTransactionLogs = await db.transaction_logs.create(body);
+    if(!insertTransactionLogs){
+        throw new BadRequestError("Error While Adding Transaction Logs.");
+    }
+
+    // get amount token points
+    let tokenRange = await db.token_range.findOne({
+        where: {
+            startAmount: { [Op.gte]: amount },
+            endAmount: { [Op.lte]: amount },
+            deleteAt: null
+        },
+        order: [startAmount, 'desc']
+    });
+
+    if(!tokenRange){ 
+        tokenRange = await db.token_range.findOne({
+            where: {
+                startAmount: { [Op.gte]: amount },
+                deleteAt: null
+            },
+            order: [startAmount, 'desc']
+        });
+    }
+    const tokenPoints = tokenRange.tokenPoints || 0;
+    const updateTokenPoints = await db.customer_token_points.update(
+        { points: Sequelize.literal(`points + ${tokenPoints}`) },
+        { where: { customerId }}
+    );
+    if(!updateTokenPoints){
+        throw new BadRequestError("Error While Adding Transaction Logs.");
+    }
+    return {  
+        statusCode: 200, 
+        message: 'Customer Logs Added Successfully'
+    };
 }
