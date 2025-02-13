@@ -1,24 +1,22 @@
 import { useMutation } from 'react-query';
-import { getBooks } from '../services/booksService';
-import { addBook } from '../services/booksService';
+import { addCustomer, getCustomers } from '../services/customersService';
 
-export const useGetBookQuery = () =>
+export const useGetCustomerQuery = () =>
   useMutation(['books'], async (params) => {
-    const res = await getBooks(params);
+    const res = await getCustomers(params);
     return {data: res.data.data, totalCount:res.data.totalCount};
   });
 
 
-export const useAddBookMutation = () =>
+export const useAddCustomerMutation = () =>
   useMutation(
-    ['addBook'], // Query key for this mutation
-    async (bookData) => {
-      const res = await addBook(bookData);
+    ['addCustomer'], // Query key for this mutation
+    async (customerData) => {
+      const res = await addCustomer(customerData);
       return res.data; // Assuming the response has a data field with the added book
     },
     {
       onSuccess: () => {
-        // Optionally refetch the list of books or perform other side effects
         console.log('Book added successfully');
       },
       onError: (error) => {

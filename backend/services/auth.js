@@ -79,10 +79,10 @@ exports.logoutService = async (mobile, accesstoken) => {
         throw new ValidationError(`User with Mobile Number ${mobile} does not exist`);
     }
     await db.user_token.update(
-        { deleted_at: Date.now() },
+        { deletedAt: Date.now() },
         {
             where: {
-                user_id : userInfo.id,
+                userId : userInfo.id,
                 token : accesstoken
             }
         }

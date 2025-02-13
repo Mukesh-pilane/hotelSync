@@ -10,16 +10,20 @@ import { paths } from './utility/constants';
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 import NotFound from "./pages/NotFound/NotFound";
+import { QueryClientProvider } from "react-query";
+import queryClient from "./queryClient";
+import { useState } from "react";
 
 
 
 function App() {
+  const [queryClientstate] = useState(() => queryClient); 
 
   const router = createBrowserRouter([
     ...Object.values(paths?.publicRoutes)?.map((e) => {
       return {
         path: e?.path,
-        element: <PublicRoute component={e?.element} /> 
+        element: <PublicRoute component={e?.element} />
       }
     }),
     ...Object.values(paths?.privateRoutes)?.map((e) => {
@@ -47,7 +51,7 @@ function App() {
   ]);
 
   return (
-    <>
+    <QueryClientProvider client={queryClientstate}>
       <MantineProvider
         withGlobalStyles withNormalizeCSS
         theme={{
@@ -56,7 +60,7 @@ function App() {
         }}>
         <RouterProvider router={router} />
       </MantineProvider>
-    </>
+    </QueryClientProvider>
   )
 }
 
