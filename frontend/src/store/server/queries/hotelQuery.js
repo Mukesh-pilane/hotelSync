@@ -1,18 +1,18 @@
 import { useMutation } from 'react-query';
-import { addCustomer, getCustomers } from '../services/customersService';
+import { addHotel, getHotels } from '../services/hotelService';
 
-export const useGetCustomerQuery = () =>
-  useMutation(['customer'], async (params) => {
-    const res = await getCustomers(params);
+export const useGetHotelQuery = () =>
+  useMutation(['hotel'], async (params) => {
+    const res = await getHotels(params);
     return {data: res.data.data, totalCount:res.data.totalCount};
   });
 
 
-export const useAddCustomerMutation = () =>
+export const useAddHotelMutation = () =>
   useMutation(
-    ['addCustomer'], // Query key for this mutation
-    async (customerData) => {
-      const res = await addCustomer(customerData);
+    ['addHotel'], // Query key for this mutation
+    async (hotelData) => {
+      const res = await addHotel(hotelData);
       return res.data; // Assuming the response has a data field with the added book
     },
     {

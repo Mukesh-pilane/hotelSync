@@ -5,6 +5,7 @@ const ForgotPassword = lazy(() => import("../pages/ForgotPassword/ForgotPassword
 const Home = lazy(() => import("../pages/Home/Home"))
 const DashBoard = lazy(() => import("../pages/DashBoard/DashBoard"))
 const Users = lazy(() => import("../pages/Users/Users"))
+const Hotel = lazy(() => import("../pages/Hotel/Hotel"))
 
 
 export const paths = {
@@ -35,9 +36,9 @@ export const paths = {
                     path: "/users",
                     element: Users, 
                 },
-                holtels:{
+                Hotel:{
                     path: "/hotels",
-                    element: Users, 
+                    element: Hotel, 
                 },
             }
         }

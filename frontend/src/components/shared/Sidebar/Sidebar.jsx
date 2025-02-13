@@ -1,6 +1,7 @@
 import {
   IconAdjustments,
-  IconUsersGroup
+  IconUsersGroup,
+  IconBuilding
 } from '@tabler/icons-react';
 import { Avatar, Box, Drawer, Flex, Group, ScrollArea, Text } from '@mantine/core';
 import LinksGroup from './LinksGroup';
@@ -12,6 +13,7 @@ import { useSidebarStore } from '../../../store/client/sideBarStore';
 
 const mockdata = [
   { label: 'users', icon: IconUsersGroup, link: '/users' },
+  { label: 'Hotels', icon: IconBuilding, link: '/hotels' },
   {
     label: 'Settings',
     icon: IconAdjustments,

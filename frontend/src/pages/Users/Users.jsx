@@ -1,6 +1,6 @@
 import React, { useState, lazy, useMemo, useEffect } from 'react'
 const Table = lazy(() => import("../../components/shared/Table/Table"))
-import { Button, Paper, Stack } from '@mantine/core'
+import { Avatar, Button,  Stack } from '@mantine/core'
 import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
 import { useDisclosure } from '@mantine/hooks'
 import CustomModal from '../../components/shared/Modal/Modal'
@@ -50,8 +50,35 @@ const data = [
 const Users = () => {
   const [search, setSearch] = useState("")
   const [opened, { open, close }] = useDisclosure(false);
-  const { mutate, data, isLoading } = useGetCustomerQuery();
+  const { mutate, data:customersData, isLoading } = useGetCustomerQuery();
 
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'fname', // Maps to the first name
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lname', // Maps to the last name
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'mobile', // Maps to the mobile number
+        header: 'Mobile',
+      },
+      {
+        accessorKey: 'avatar', // Maps to the avatar image
+        header: 'Avatar',
+        Cell: ({ cell }) => (
+          <Avatar
+            src={cell.getValue()}
+          />
+        ),
+      },
+    ],
+    []
+  );
+  
   
   useEffect(() => {
     mutate();
@@ -69,9 +96,7 @@ const Users = () => {
             </Button>
           }
         />
-        {/* <Paper> */}
-        {/* <Table columns={columns} data={data} /> */}
-        {/* </Paper> */}
+        <Table columns={columns} data={data} />
       </Stack>
       <CustomModal title="User" opened={opened} close={close}>
         <UserForm data={{}} close={close} />
