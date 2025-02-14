@@ -8,7 +8,8 @@ module.exports = {
     "host": process.env.PG_HOST,
     "port": process.env.PG_PORT,
     "dialect": process.env.PG_DIALECT,
-    "logging": false
+    "logging": false,
+    "cors_frontend_origib" : process.env.FRONTEND_URL
   },
   "test": {
     "username": "root",
@@ -24,6 +25,7 @@ module.exports = {
     "host": process.env.PG_HOST,
     "port": process.env.PG_PORT,
     "dialect": process.env.PG_DIALECT,
-    "logging": false
+    "logging": false,
+    "cors_frontend_origib" : process.env.FRONTEND_URL
   }
 }

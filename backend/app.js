@@ -3,6 +3,8 @@ var express = require('express');
 const cors = require('cors');
 var path = require('path');
 require("./config/connection"); // create db connection
+const env = process.env.NODE_ENV || 'development';
+const env_vars = require('./config/config')[env];
 
 const indexRouter = require('./routes/index');
 
@@ -10,7 +12,7 @@ var app = express();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin:  env_vars.cors_frontend_origib}));
 
 app.use('/api', indexRouter);
 
