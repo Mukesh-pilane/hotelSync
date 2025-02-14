@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Anchor, Burger, Container, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './Header.module.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,7 +34,6 @@ export default function Header() {
     return (
         <header className={classes.header}>
             <Container size="lg" className={classes.inner}>
-                <MantineLogo size={28} />
                 <Group gap={5} visibleFrom="xs">
                     {items}
                 </Group>
