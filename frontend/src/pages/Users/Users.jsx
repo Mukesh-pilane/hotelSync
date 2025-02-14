@@ -15,7 +15,7 @@ const Users = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [transactionOpened, { open: transactionOpen, close: transactionClose }] = useDisclosure(false);
 
-  const { data: customersData, isLoading, isError } = useGetCustomerQuery({})
+  const { data: customersData, isLoading } = useGetCustomerQuery({})
 
   
   const columns = useMemo(
