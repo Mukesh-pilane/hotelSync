@@ -36,7 +36,7 @@ const Hotel = () => {
         <ReUsableHeader
           search={search}
           setSearch={setSearch}
-          Button={
+          Component={
             <Button variant="default" onClick={open}>
               Add Hotel
             </Button>

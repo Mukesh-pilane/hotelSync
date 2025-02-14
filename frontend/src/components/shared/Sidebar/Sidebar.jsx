@@ -14,14 +14,14 @@ import { useSidebarStore } from '../../../store/client/sideBarStore';
 const mockdata = [
   { label: 'Customer', icon: IconUsersGroup, link: '/customer' },
   { label: 'Hotels', icon: IconBuilding, link: '/hotels' },
-  {
-    label: 'Settings',
-    icon: IconAdjustments,
-    links: [
-      { label: 'Token', link: '/token' },
-      { label: 'User Log', link: '/userlogs' },
-    ],
-  },
+  // {
+  //   label: 'Settings',
+  //   icon: IconAdjustments,
+  //   links: [
+  //     { label: 'Token', link: '/token' },
+  //     { label: 'User Log', link: '/userlogs' },
+  //   ],
+  // },
 ];
 
 

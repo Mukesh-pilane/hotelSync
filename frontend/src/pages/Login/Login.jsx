@@ -7,7 +7,6 @@ import {
   Paper,
   PasswordInput,
   Text,
-  TextInput,
   Title,
 } from '@mantine/core';
 import { z } from 'zod';
@@ -42,7 +41,7 @@ const Login = () => {
       const { data } = await loginUser({ ...values, mobile: `${values.mobile}` });
       persistToken(data.token)
       setUserData({ mobile: values.mobile, hotel: data.hotel, role: data.role })
-      setAuth({ isAuthenticated: true, email: values.email });
+      setAuth({ isAuthenticated: true, userData: { mobile: values.mobile, hotel: data.hotel, role: data.role } });
     } catch (error) {
       showErrorNotification(error.response.data.message || "Invalid Credentials")
     }

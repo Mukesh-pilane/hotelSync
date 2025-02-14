@@ -34,7 +34,6 @@ const TransactionForm = ({ data, close }) => {
         }
     }
 
-    console.log('customerId', customerId)
 
     const handleSubmit = async (values) => {
         try {

@@ -15,7 +15,7 @@ export default function TopBar() {
         <header className={classes.header}>
             <Flex size="lg" align="center" flex={1} p="10px 20px" justify='space-between'>
               <IconLayoutSidebarLeftCollapse onClick={toggleSidebar}/>
-              <Text size='md' fw={600} c="blue">{userData.hotel.toUpperCase()}</Text>
+              <Text size='md' fw={600} c="blue">{userData?.hotel?.toUpperCase()}</Text>
               </Flex>
         </header>
     );
