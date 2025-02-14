@@ -7,7 +7,7 @@ import { Avatar, Box, Drawer, Flex, Group, ScrollArea, Text } from '@mantine/cor
 import LinksGroup from './LinksGroup';
 import UserButton from './UserButton';
 import classes from './Sidebar.module.css';
-import HotelSync from '../../../assets/svg/hotelSync';
+import HotelSync from '../../../assets/svg/HotelSync';
 import { useMediaQuery } from '@mantine/hooks';
 import { useSidebarStore } from '../../../store/client/sideBarStore';
 
