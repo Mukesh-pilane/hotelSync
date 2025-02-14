@@ -8,5 +8,5 @@ export const getHotels =  (params) => {
 };
 
 export const addHotel =  (data) => {
-    return  privateRequest.post(CUSTOMER, data);
+    return  privateRequest.post(HOTEL, data);
 };

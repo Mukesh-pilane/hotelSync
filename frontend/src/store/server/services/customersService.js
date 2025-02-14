@@ -1,5 +1,5 @@
 import { privateRequest } from "../../../lib/axiosConfig/privateRequest";
-import { CUSTOMER } from "../../../utility/apiEndPoints"
+import { CUSTOMER, TRANSACTION } from "../../../utility/apiEndPoints"
 
 export const getCustomers =  (params) => {
     return  privateRequest.get(CUSTOMER, {
@@ -9,4 +9,8 @@ export const getCustomers =  (params) => {
 
 export const addCustomer =  (data) => {
     return  privateRequest.post(CUSTOMER, data);
+};
+
+export const addTransactionLog =  (data) => {
+    return  privateRequest.post(TRANSACTION, data);
 };

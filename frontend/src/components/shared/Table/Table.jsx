@@ -5,14 +5,29 @@ import {
 
 
 const Table = (props) => {
- const {data, columns} = props
+  const { data, columns, isLoading,tableSetting } = props
 
   const table = useMantineReactTable({
     columns,
-    data, // must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+    data,
+    state: { isLoading: isLoading },
+    mantinePaginationProps: {
+      showRowsPerPage: false,
+    },
+    paginationDisplayMode: 'pages',
+    mantineTableContainerProps: { sx: { height: 'calc(100vh - 20rem)' } },
+    ...tableSetting
   });
 
-  return <MantineReactTable table={table} />;
+  const handleSaveRow = ()=>{
+
+  }
+  return <MantineReactTable
+    table={table}
+    editDisplayMode="modal" //default
+    enableEditing
+    onEditingRowSave={handleSaveRow}
+  />;
 };
 
 export default Table;

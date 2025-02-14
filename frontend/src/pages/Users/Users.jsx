@@ -1,65 +1,31 @@
-import React, { useState, lazy, useMemo, useEffect } from 'react'
-const Table = lazy(() => import("../../components/shared/Table/Table"))
-import { Avatar, Button,  Stack } from '@mantine/core'
+import React, { useState, useMemo, useEffect } from 'react'
+import Table from '../../components/shared/Table/Table'
+import { Button, Stack } from '@mantine/core'
 import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
 import { useDisclosure } from '@mantine/hooks'
 import CustomModal from '../../components/shared/Modal/Modal'
 import UserForm from './UserForm'
 import { useGetCustomerQuery } from '../../store/server/queries/customersQuery'
-
-const data = [
-  {
-    id: '1',
-    avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png',
-    fname: 'Robert',
-    lname: 'Wolfkisser',
-    mobile: '123-456-7890', // Example mobile number
-  },
-  {
-    id: '2',
-    avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-7.png',
-    fname: 'Jill',
-    lname: 'Jailbreaker',
-    mobile: '234-567-8901', // Example mobile number
-  },
-  {
-    id: '3',
-    avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png',
-    fname: 'Henry',
-    lname: 'Silkeater',
-    mobile: '345-678-9012', // Example mobile number
-  },
-  {
-    id: '4',
-    avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png',
-    fname: 'Bill',
-    lname: 'Horsefighter',
-    mobile: '456-789-0123', // Example mobile number
-  },
-  {
-    id: '5',
-    avatar: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-10.png',
-    fname: 'Jeremy',
-    lname: 'Footviewer',
-    mobile: '567-890-1234', // Example mobile number
-  },
-];
+import TransactionForm from './TransactionForm'
 
 
 
 const Users = () => {
   const [search, setSearch] = useState("")
   const [opened, { open, close }] = useDisclosure(false);
-  const { mutate, data:customersData, isLoading } = useGetCustomerQuery();
+  const [transactionOpened, { open: transactionOpen, close: transactionClose }] = useDisclosure(false);
 
+  const { data: customersData, isLoading, isError } = useGetCustomerQuery({})
+
+  
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'fname', // Maps to the first name
+        accessorKey: 'firstName', // Maps to the first name
         header: 'First Name',
       },
       {
-        accessorKey: 'lname', // Maps to the last name
+        accessorKey: 'lastName', // Maps to the last name
         header: 'Last Name',
       },
       {
@@ -67,39 +33,48 @@ const Users = () => {
         header: 'Mobile',
       },
       {
-        accessorKey: 'avatar', // Maps to the avatar image
-        header: 'Avatar',
+        accessorKey: 'customer_token_point', // Maps to the avatar image
+        header: 'Token',
         Cell: ({ cell }) => (
-          <Avatar
-            src={cell.getValue()}
-          />
+          cell.customer_token_point || "--"
         ),
       },
     ],
     []
   );
-  
-  
-  useEffect(() => {
-    mutate();
-  }, [])
-  
+
+
   return (
     <>
       <Stack>
         <ReUsableHeader
           search={search}
           setSearch={setSearch}
-          Button={
-            <Button variant="default" onClick={open}>
-              Add User
-            </Button>
+          Component={
+            <>
+              <Button variant="default" onClick={open}>
+                Add Customer
+              </Button>
+              <Button variant="default" onClick={transactionOpen}>
+                Add transaction
+              </Button>
+            </>
           }
         />
-        <Table columns={columns} data={data} />
+        <Table
+          columns={columns}
+          data={customersData?.data || []}
+          isLoading={customersData === undefined}
+        // tableSetting={{
+        //   enableEditing: true,
+        // }}
+        />
       </Stack>
-      <CustomModal title="User" opened={opened} close={close}>
+      <CustomModal title="Customer" opened={opened} close={close}>
         <UserForm data={{}} close={close} />
+      </CustomModal>
+      <CustomModal title="Customer" opened={transactionOpened} close={transactionClose}>
+        <TransactionForm close={transactionClose} />
       </CustomModal>
     </>
   )

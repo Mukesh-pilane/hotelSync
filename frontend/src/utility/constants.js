@@ -33,7 +33,7 @@ export const paths = {
                     element: DashBoard,
                 },
                 users:{
-                    path: "/users",
+                    path: "/customer",
                     element: Users, 
                 },
                 Hotel:{

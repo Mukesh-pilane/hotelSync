@@ -4,7 +4,9 @@ import { Button, SimpleGrid, Group, NumberInput, TextInput, Textarea } from '@ma
 import { useAddHotelMutation } from '../../store/server/queries/hotelQuery';
 
 const initialValues = {
-    mobile: '',
+    name: '',
+    address:'',
+    baseTokenPoints:''
 };
 
 const HotelForm = ({ data, close }) => {
@@ -14,14 +16,11 @@ const HotelForm = ({ data, close }) => {
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: modifiedData,
-        validate: {
-            mobile: (value) => (/^[6-9]\d{9}$/.test(value) ? null : 'Invalid mobile number'),
-        },
     });
 
 
     const handleSubmit = async (values) => {
-        addHotelMutation({ ...values, mobile: `${values.mobile}` })
+        addHotelMutation({ ...values })
         close()
     };
 
@@ -47,8 +46,8 @@ const HotelForm = ({ data, close }) => {
                 withAsterisk
                 label="Base Token"
                 placeholder="100"
-                key={form.key('baseTokens')}
-                {...form.getInputProps('baseTokens')}
+                key={form.key('baseTokenPoints')}
+                {...form.getInputProps('baseTokenPoints')}
                 hideControls
             />
             <Group justify="flex-end" mt="md">

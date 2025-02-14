@@ -1,7 +1,7 @@
 import {
   IconAdjustments,
   IconUsersGroup,
-  IconBuilding
+  IconBuilding,
 } from '@tabler/icons-react';
 import { Avatar, Box, Drawer, Flex, Group, ScrollArea, Text } from '@mantine/core';
 import LinksGroup from './LinksGroup';
@@ -12,7 +12,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { useSidebarStore } from '../../../store/client/sideBarStore';
 
 const mockdata = [
-  { label: 'users', icon: IconUsersGroup, link: '/users' },
+  { label: 'Customer', icon: IconUsersGroup, link: '/customer' },
   { label: 'Hotels', icon: IconBuilding, link: '/hotels' },
   {
     label: 'Settings',
@@ -30,11 +30,11 @@ export default function SideBar() {
   const { sidebarVisible, closeSidebar } = useSidebarStore();
 
   const matches = useMediaQuery('(min-width: 56.25em)');
-  const links = mockdata.map((item) => <LinksGroup {...item} key={item.label} />);
-
+  const links = mockdata.map((item) => <LinksGroup {...item} closeSidebar={closeSidebar} key={item.label} />);
 
   return (
-    <Box component={matches ? "aside" : Drawer}
+    <Box
+      component={matches? "aside" : Drawer}
       opened={sidebarVisible}
       onClose={closeSidebar}
       offset={0}
