@@ -5,6 +5,10 @@ export const persistToken = (token) => {
   export const clearToken = () => {
     localStorage.removeItem("token");
   };
+
+  export const clearUserData = () => {
+    localStorage.removeItem("userData");
+  };
   
   export const getToken = () => {
     return localStorage.getItem("token");

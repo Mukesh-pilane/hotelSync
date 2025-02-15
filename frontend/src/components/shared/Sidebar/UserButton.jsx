@@ -1,13 +1,13 @@
-import { IconChevronRight } from '@tabler/icons-react';
+import { IconLogout } from '@tabler/icons-react';
 import { IconUserHexagon } from '@tabler/icons-react';
 
-import { Group, Text, ThemeIcon, UnstyledButton } from '@mantine/core';
+import { Group, Text, ThemeIcon, Tooltip, UnstyledButton } from '@mantine/core';
 import classes from './UserButton.module.css';
 import { useAuthStore } from '../../../store/client/authStore';
 
 export default function UserButton() {
-    const { userData } = useAuthStore((state) => state);
-  
+  const { userData, logout } = useAuthStore((state) => state);
+
   return (
     <UnstyledButton className={classes.user}>
       <Group className={classes.group}>
@@ -18,13 +18,10 @@ export default function UserButton() {
           <Text size="sm" fw={500}>
             {userData?.mobile}
           </Text>
-
-          {/* <Text color="dimmed" size="xs">
-            hspoonlicker@outlook.com
-          </Text> */}
         </div>
-
-        <IconChevronRight size={14} stroke={1.5} />
+        <Tooltip arrowOffset={10} arrowSize={4} label="Logout" withArrow position="right-start">
+          <IconLogout onClick={logout} size={24} stroke={1.5} />
+        </Tooltip>
       </Group>
     </UnstyledButton>
   );

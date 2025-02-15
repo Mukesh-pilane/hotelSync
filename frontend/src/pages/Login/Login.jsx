@@ -51,7 +51,7 @@ const Login = () => {
     <div className={classes.wrapper}>
       <Paper component='form' onSubmit={form.onSubmit(handleSubmit)} className={classes.form} radius={0} p={30}>
         <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
-          Welcome back to BookTracker!
+          Welcome back to HotelSync!
         </Title>
 
         <NumberInput
@@ -75,13 +75,6 @@ const Login = () => {
         <Button fullWidth mt="xl" size="md" type="submit" loading={form.submitting} loaderProps={{ type: 'dots' }}>
           Login
         </Button>
-
-        <Text ta="center" mt="md">
-          Don&apos;t have an account?{' '}
-          <Anchor component={Link} to="/register" fw={700}>
-            Register
-          </Anchor>
-        </Text>
       </Paper>
     </div>
   );
