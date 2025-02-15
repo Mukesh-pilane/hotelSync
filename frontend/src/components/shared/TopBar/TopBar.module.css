@@ -5,3 +5,8 @@
     display: flex;
   }
   
+  .sidebarMenuBtn{
+    @media (min-width: 56.25em) {
+      display: none;
+    }
+  }
