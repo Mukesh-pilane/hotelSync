@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { addHotel, getHotels } from '../services/hotelService';
+import { showSuccessNotification } from '../../../utility/notification';
 
 // **1. useGetHotelQuery** - Fetching hotel data
 export const useGetHotelQuery = (params) => 
@@ -32,10 +33,11 @@ export const useAddHotelMutation = () => {
     },
     {
       onSuccess: (data) => {
-        console.log('Hotel added successfully', data);
+        showSuccessNotification(data?.message)
         queryClient.invalidateQueries('hotels'); // Invalidate the hotels query to refetch data
       },
       onError: (error) => {
+        console.log('data', data)
         console.error('Error adding hotel:', error); // Error logging
         // You might want to show a toast or UI feedback here
       },

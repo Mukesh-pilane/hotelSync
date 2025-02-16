@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { addCustomer, addTransactionLog, getCustomers } from '../services/customersService';
+import { showSuccessNotification } from '../../../utility/notification';
 
 // **1. useGetCustomerQuery** for fetching customer data
 export const useGetCustomerQuery = (params) =>
@@ -32,7 +33,7 @@ export const useAddCustomerMutation = () => {
     },
     {
       onSuccess: (data) => {
-        console.log('Customer added successfully', data);
+        showSuccessNotification("Customer Added successfully")
         queryClient.invalidateQueries('customers'); // Invalidate and refetch customers query after successful mutation
       },
       onError: (error) => {
@@ -59,7 +60,7 @@ export const useTransactionLogMutation = () => {
     },
     {
       onSuccess: (data) => {
-        console.log('Hotel added successfully', data);
+        showSuccessNotification("Customer Added successfully")
         queryClient.invalidateQueries('customers'); // Invalidate the hotels query to refetch data
       },
       onError: (error) => {

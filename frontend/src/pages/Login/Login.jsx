@@ -6,7 +6,6 @@ import {
   NumberInput,
   Paper,
   PasswordInput,
-  Text,
   Title,
 } from '@mantine/core';
 import { z } from 'zod';

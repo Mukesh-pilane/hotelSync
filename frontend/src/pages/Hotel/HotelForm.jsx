@@ -1,16 +1,16 @@
 import React from 'react'
 import { useForm } from '@mantine/form';
-import { Button, SimpleGrid, Group, NumberInput, TextInput, Textarea } from '@mantine/core';
+import { Button, Group, NumberInput, TextInput, Textarea } from '@mantine/core';
 import { useAddHotelMutation } from '../../store/server/queries/hotelQuery';
 
 const initialValues = {
     name: '',
-    address:'',
-    baseTokenPoints:''
+    address: '',
+    baseTokenPoints: ''
 };
 
 const HotelForm = ({ data, close }) => {
-    const { mutate: addHotelMutation, isError, error } = useAddHotelMutation();
+    const { mutate: addHotelMutation } = useAddHotelMutation();
 
     const modifiedData = data?.id ? data : initialValues;
     const form = useForm({
@@ -20,8 +20,9 @@ const HotelForm = ({ data, close }) => {
 
 
     const handleSubmit = async (values) => {
-        addHotelMutation({ ...values })
-        close()
+        addHotelMutation({ ...values }, {
+            onSuccess: close()
+        })
     };
 
     return (
