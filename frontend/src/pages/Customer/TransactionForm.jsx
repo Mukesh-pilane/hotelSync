@@ -36,13 +36,7 @@ const TransactionForm = ({ data, close }) => {
 
 
     const handleSubmit = async (values) => {
-        try {
-            await addTransactionMutation({ amount:values.amount, customerId}, close);
-            // close()
-        } catch (error) {
-            // unable to catch error
-            console.log('err')
-        }
+            addTransactionMutation({ amount:values.amount, customerId}, {onSuccess:close});
     };
 
     return (

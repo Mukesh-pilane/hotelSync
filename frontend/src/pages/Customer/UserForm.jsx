@@ -35,15 +35,13 @@ const UserForm = ({ data, close }) => {
         }
     }
 
-    console.log('form.values', form.values)
 
     const handleSubmit = async (values) => {
         if (customerId) {
-            addTransactionMutation({ amount: values.amount, customerId }, close);
+            addTransactionMutation({ amount: values.amount, customerId },  {onSuccess:close});
         } else {
-            addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 }, close);
+            addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 },  {onSuccess:close});
         }
-        // close()
     };
 
     return (

@@ -1,8 +1,4 @@
-import {
-  IconAdjustments,
-  IconUsersGroup,
-  IconBuilding,
-} from '@tabler/icons-react';
+
 import { Avatar, Box, Drawer, Flex, Group, ScrollArea, Text } from '@mantine/core';
 import LinksGroup from './LinksGroup';
 import UserButton from './UserButton';
@@ -10,31 +6,26 @@ import classes from './Sidebar.module.css';
 import HotelSync from '../../../assets/svg/HotelSync';
 import { useMediaQuery } from '@mantine/hooks';
 import { useSidebarStore } from '../../../store/client/sideBarStore';
+import { sideBarMenu } from '../../../utility/constants';
+import { useAuthStore } from '../../../store/client/authStore';
+import { permissions } from '../../../utility/permission';
 
-const mockdata = [
-  { label: 'Customer', icon: IconUsersGroup, link: '/customer' },
-  { label: 'Hotels', icon: IconBuilding, link: '/hotels' },
-  // {
-  //   label: 'Settings',
-  //   icon: IconAdjustments,
-  //   links: [
-  //     { label: 'Token', link: '/token' },
-  //     { label: 'User Log', link: '/userlogs' },
-  //   ],
-  // },
-];
 
 
 
 export default function SideBar() {
   const { sidebarVisible, closeSidebar } = useSidebarStore();
+  const { userData } = useAuthStore((state) => state);
 
   const matches = useMediaQuery('(min-width: 56.25em)');
-  const links = mockdata.map((item) => <LinksGroup {...item} closeSidebar={closeSidebar} key={item.label} />);
+  const links = sideBarMenu
+  .filter(item => userData && permissions[userData?.role]?.includes(item.permissionKey))
+  .map(item => <LinksGroup {...item} closeSidebar={closeSidebar} key={item.label} />);
+
 
   return (
     <Box
-      component={matches? "aside" : Drawer}
+      component={matches ? "aside" : Drawer}
       opened={sidebarVisible}
       onClose={closeSidebar}
       offset={0}

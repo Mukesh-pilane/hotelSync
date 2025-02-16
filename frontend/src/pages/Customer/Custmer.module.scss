@@ -1,0 +1,12 @@
+.menuDropDown {
+    width: auto !important;
+    @media (min-width: 25em) {
+        display: none;
+    }
+}
+
+.btnMenu {
+    @media (max-width: 25em) {
+        display: none;
+    }
+}
