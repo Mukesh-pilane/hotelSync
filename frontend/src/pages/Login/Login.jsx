@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import { loginUser } from '../../store/server/services/authService';
 import { useAuthStore } from '../../store/client/authStore';
 import { persistToken, setUserData } from '../../utility/localStorageUtils';
-import { showErrorNotification } from '../../utility';
+import { showErrorNotification } from '../../utility/notification';
 
 const Login = () => {
   const { setAuth } = useAuthStore((state) => state);

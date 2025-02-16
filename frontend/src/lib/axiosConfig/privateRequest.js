@@ -1,7 +1,7 @@
 import axios from "axios";
-import { showErrorNotification } from "../../utility/index";
+import { showErrorNotification } from "../../utility/notification";
 import { getApiParams } from "../../utility/getApiParams";
-import { clearToken, getToken, } from "../../utility/localStorageUtils";
+import { clearToken, getToken } from "../../utility/localStorageUtils";
 
 // Step-1: Create a new Axios instance with a custom config.
 // The timeout is set to 20s. If the request takes longer than
@@ -31,48 +31,48 @@ const responseHandler = (response) => {
 };
 
 const errorHandler = (error) => {
- 
+
   return Promise.reject(error);
 };
 
 const responseErrorHandler = (error) => {
 
   if (error.response) {
-    const { status, data:{ message } } = error.response
+    const { status, data: { message } } = error.response
 
     switch (status) {
       case 401:
-        showErrorNotification("Token Expired! Please Login again")
+        showErrorNotification(`Error ${status}`,"Token Expired! Please Login again")
         setTimeout(() => {
           window.location = '/';
           clearToken()
         }, 1000)
         break;
       case 400:
-        showErrorNotification(message ? message : message || "Inavalid Input/ Bad Request")
+        showErrorNotification(`Error ${status}`,message || "Inavalid Input/ Bad Request")
         break;
       case 403:
-        showErrorNotification(message ? message : message || "Access Denied/ Forbidden")
+        showErrorNotification(`Error ${status}`,message || "Access Denied/ Forbidden")
         break;
       case 404:
-        showErrorNotification(message ? message : message || "Item doesn't exist")
+        showErrorNotification(`Error ${status}`,message || "Item doesn't exist")
         break;
       case 405:
-        showErrorNotification(message ? message : message || "Invalid Request")
+        showErrorNotification(`Error ${status}`,message || "Invalid Request")
         break;
       case 422:
-        showErrorNotification(message ? message : message || "Already Exists")
+        showErrorNotification(`Error ${status}`,message || "Already Exists")
         break;
       case 504:
-        showErrorNotification(message ? message : message || "Network Error")
+        showErrorNotification(`Error ${status}`,message || "Network Error")
         break;
       default:
-        showErrorNotification(message ? message : message || "Some Error Occurred")
+        showErrorNotification(`Error ${status}`,message || "Some Error Occurred")
         break;
     }
   }
   else {
-    showErrorNotification("Some Error Occurred")
+    showErrorNotification("Error 500","Some Error Occurred")
   }
   return Promise.reject(error)
 }
