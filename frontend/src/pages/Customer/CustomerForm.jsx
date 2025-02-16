@@ -8,7 +8,7 @@ const initialValues = {
     mobile:""
 };
 
-const UserForm = ({ data, close }) => {
+const CustomerForm = ({ data, close }) => {
 
     const { mutate: addCustomerMutation, isError, error } = useAddCustomerMutation();
     const { mutate: addTransactionMutation } = useTransactionLogMutation();
@@ -66,7 +66,6 @@ const UserForm = ({ data, close }) => {
                         placeholder="1000"
                         key={form.key('amount')}
                         {...form.getInputProps('amount')}
-                        onChange={handleNumerChange}
                         hideControls
                     /> :
                     <>
@@ -91,7 +90,6 @@ const UserForm = ({ data, close }) => {
                             key={form.key('amount')}
                             {...form.getInputProps('amount')}
                             hideControls
-                            // onChange={handleNumerChange}
                         />
                     </>
 
@@ -104,4 +102,4 @@ const UserForm = ({ data, close }) => {
     )
 }
 
-export default UserForm
+export default CustomerForm

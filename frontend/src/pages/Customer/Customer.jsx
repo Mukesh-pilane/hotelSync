@@ -4,7 +4,7 @@ import { Button, Flex, Menu, Stack } from '@mantine/core'
 import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
 import { useDisclosure } from '@mantine/hooks'
 import CustomModal from '../../components/shared/Modal/Modal'
-import UserForm from './UserForm'
+import CustomerForm from './CustomerForm'
 import { useGetCustomerQuery } from '../../store/server/queries/customersQuery'
 import TransactionForm from './TransactionForm'
 import { IconSettings } from '@tabler/icons-react';
@@ -93,7 +93,7 @@ const Users = () => {
         />
       </Stack>
       <CustomModal title="Customer" opened={opened} close={close}>
-        <UserForm data={{}} close={close} />
+        <CustomerForm data={{}} close={close} />
       </CustomModal>
       <CustomModal title="Customer" opened={transactionOpened} close={transactionClose}>
         <TransactionForm close={transactionClose} />
