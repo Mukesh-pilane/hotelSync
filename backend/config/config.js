@@ -2,11 +2,12 @@ require('dotenv').config();
 
 module.exports = {
   "development": {
-    "username": "postgres",
-    "password": "1234",
-    "database": "hotelSync-local",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
+    "username": process.env.PG_USERNAME,
+    "password": process.env.PG_PASSWORD,
+    "database": process.env.PG_DATABASE,
+    "host": process.env.PG_HOST,
+    "port": process.env.PG_PORT,
+    "dialect": process.env.PG_DIALECT,
     "logging": false
   },
   "test": {
@@ -17,10 +18,12 @@ module.exports = {
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": process.env.PG_USERNAME,
+    "password": process.env.PG_PASSWORD,
+    "database": process.env.PG_DATABASE,
+    "host": process.env.PG_HOST,
+    "port": process.env.PG_PORT,
+    "dialect": process.env.PG_DIALECT,
+    "logging": false
   }
 }
