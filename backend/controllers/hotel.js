@@ -1,4 +1,4 @@
-const { addHotel, retriveHotels } = require('../services/hotel');
+const { addHotel, retriveHotels, addRange } = require('../services/hotel');
 
 exports.insertHotel = async (req, res) => {
     const body = req.body;
@@ -7,8 +7,12 @@ exports.insertHotel = async (req, res) => {
 }
 
 exports.fetchHotels = async (req, res) => {
-    const { email } = req.body;
-    const accesstoken = req.header("Authorization");
-    const result = await retriveHotels(email, accesstoken);
+    const result = await retriveHotels();
+    res.status(200).send(result);
+}
+
+exports.insertRange = async (req, res) => {
+    const body = req.body;
+    const result = await addRange(body);
     res.status(200).send(result);
 }

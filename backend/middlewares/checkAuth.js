@@ -7,14 +7,18 @@ module.exports = async (req, res, next) => {
         return res.status(401).send({ message: 'Unauthorized' });
     }
     let accessToken = req.headers.authorization.split(' ')[1];
-    const findInDb = await db.token.findOne({ where: { token: accessToken }});
+    const findInDb = await db.user_token.findOne({ where: { token: accessToken }});
     if (!findInDb) {
         return res.status(401).send({ message: 'Unauthorized' });
     }
     const decode = verifyToken(accessToken);
-    const userDetails = await db.user.findOne({ where: { email: decode.email}});
+    const userDetails = await db.user.findOne({ where: { mobile: decode.mobile}});
     if (userDetails) {
-        req.userData = { id: userDetails.id, name: userDetails.name, email: userDetails.email };
+        req.userData = { 
+            id: userDetails.id, 
+            role: userDetails.role_id,
+            hotel: userDetails.hotel_id
+        };
         next();
     } 
     else {
