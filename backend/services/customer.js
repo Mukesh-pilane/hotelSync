@@ -64,6 +64,25 @@ exports.createCustomer = async (body) => {
     }
 }
 
+exports.modifyCustomer = async (id, body) => {
+    const modifiedCustomer = await db.customer.update(
+        body,
+        {
+            where: {
+                id: id,
+                deletedAt: null
+            }
+        }
+    );
+    if(!modifiedCustomer){
+        throw new BadRequestError("Error while modifying customer");
+    }
+    return { 
+        statusCode: 200, 
+        message: 'Customer Updated Successfully' 
+    }
+}
+
 exports.retriveCustomers = async (hotelId) => {
     const customerData = await db.customer.findAll({
         where: {
@@ -82,6 +101,38 @@ exports.retriveCustomers = async (hotelId) => {
         statusCode: 200, 
         message: 'Customer Data Fetched Successfully',
         data: customerData
+    }
+}
+
+exports.removeCustomer = async (id) => {
+    if(!id){
+        throw new BadRequestError("Invalid Cusomer Id");
+    }
+    const customerRecord = await db.customer.findAll({
+        where: {
+            id: id,
+            deletedAt: null
+        }
+    });
+    if(!customerRecord){
+        throw new BadRequestError("Customer Not Found");
+    }
+
+    const deleteCustomer = await db.customer.update(
+        { deletedAt: Date.now() },
+        {
+            where: {
+                id: id,
+                deletedAt: null
+            }
+        }
+    );
+    if(!deleteCustomer){
+        throw new BadRequestError("Error while deleting customer");
+    }
+    return { 
+        statusCode: 200, 
+        message: 'Customer Deleted Successfully' 
     }
 }
 
@@ -127,4 +178,25 @@ exports.addTransaction = async (body) => {
         statusCode: 200, 
         message: 'Customer Logs Added Successfully'
     };
+}
+
+exports.retriveTransactions = async (hotelId) => {
+    const transactionData = await db.transaction_logs.findAll({
+        where: {
+            hotelId,
+            deletedAt: null
+        },
+        include: [
+            {
+                model: db.customer,
+                attributes: ["firstName", "lastName", "mobile"]
+            }
+        ],
+        attributes: ["amount"]
+    });
+    return { 
+        statusCode: 200, 
+        message: 'Transaction Data Fetched Successfully',
+        data: transactionData
+    }
 }
