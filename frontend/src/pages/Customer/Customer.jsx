@@ -24,22 +24,22 @@ const Users = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'firstName', // Maps to the first name
+        accessorKey: 'firstName',
         header: 'First Name',
       },
       {
-        accessorKey: 'lastName', // Maps to the last name
+        accessorKey: 'lastName',
         header: 'Last Name',
       },
       {
-        accessorKey: 'mobile', // Maps to the mobile number
+        accessorKey: 'mobile', 
         header: 'Mobile',
       },
       {
-        accessorKey: 'customer_token_point', // Maps to the avatar image
+        accessorKey: 'customer_token_point',
         header: 'Token',
         Cell: ({ cell }) => (
-          cell.customer_token_point || "--"
+          cell.getValue("customer_token_point")?.points ?? "--"
         ),
       },
     ],
