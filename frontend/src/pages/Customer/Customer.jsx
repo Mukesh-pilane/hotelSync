@@ -1,24 +1,41 @@
 import React, { useMemo, useState } from 'react'
 import Table from '../../components/shared/Table/Table'
-import { ActionIcon, Box, Button, Flex, Menu } from '@mantine/core'
-import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
+import { ActionIcon, Button, Flex, Menu, Text } from '@mantine/core'
+import { modals } from '@mantine/modals';
 import { useDisclosure } from '@mantine/hooks'
-import CustomModal from '../../components/shared/Modal/Modal'
-import CustomerForm from './CustomerForm'
-import { useGetCustomerQuery } from '../../store/server/queries/customersQuery'
-import TransactionForm from '../Transaction/TransactionForm'
 import { IconEdit, IconSettings, IconTrash } from '@tabler/icons-react';
-import styles from "./Custmer.module.scss"
 import { IconUserPlus } from '@tabler/icons-react';
 import { IconTransactionRupee } from '@tabler/icons-react';
+import styles from "./Custmer.module.scss"
+import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
+import CustomModal from '../../components/shared/Modal/Modal'
+import CustomerForm from './CustomerForm'
+import { useDeleteCustomerMutation, useGetCustomerQuery } from '../../store/server/queries/customersQuery'
+import TransactionForm from '../Transaction/TransactionForm'
 
 
 const Users = () => {
   const { data: customersData } = useGetCustomerQuery({})
+  const { mutate: deleteCustomer } = useDeleteCustomerMutation();
+
   const [opened, { open, close }] = useDisclosure(false);
   const [transactionOpened, { open: transactionOpen, close: transactionClose }] = useDisclosure(false);
   const [editData, setEditData] = useState({});
 
+  const openDeleteModal = (customerId) =>
+    modals.openConfirmModal({
+      title: 'Delete your profile',
+      centered: true,
+      children: (
+        <Text size="sm">
+          Are you sure you want to delete your profile? This action is destructive and you will have
+          to contact support to restore your data.
+        </Text>
+      ),
+      labels: { confirm: 'Delete account', cancel: "No don't delete it" },
+      confirmProps: { color: 'red' },
+      onConfirm: () => deleteCustomer(customerId),
+    });
 
 
   const columns = useMemo(
@@ -94,7 +111,7 @@ const Users = () => {
               }}>
                 <IconEdit />
               </ActionIcon>
-              <ActionIcon color="orange" onClick={() => console.log('delete')}>
+              <ActionIcon color="orange" onClick={() => openDeleteModal(row?.original?.id)}>
                 <IconTrash />
               </ActionIcon>
             </Flex>

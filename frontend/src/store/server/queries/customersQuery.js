@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { addCustomer, getCustomers, updateCustomer } from '../services/customersService';
+import { addCustomer, getCustomers, updateCustomer, deleteCustomer } from '../services/customersService';
 import { showSuccessNotification } from '../../../utility/notification';
 
 // **1. useGetCustomerQuery** for fetching customer data
@@ -75,3 +75,29 @@ export const useUpdateCustomerMutation = () => {
 };
 
 
+
+// **4. useDeleteCustomerMutation** for deleting a customer
+export const useDeleteCustomerMutation = () => {
+  const queryClient = useQueryClient(); // Access the query client for cache management
+
+  return useMutation(
+    async (customerId) => {
+      const res = await deleteCustomer(customerId); // Call to delete the customer by ID
+      return res.data; // Return the response data
+    },
+    {
+      onSuccess: () => {
+        showSuccessNotification("Customer deleted successfully"); // Show success notification
+        queryClient.invalidateQueries('customers'); // Invalidate and refetch the customers query after successful mutation
+      },
+      onError: (error) => {
+        console.error('Error deleting customer:', error); // Error logging
+        // Optionally display a toast or alert for error feedback
+      },
+      onSettled: () => {
+        // Optionally refetch data or perform cleanup actions
+        console.log('Delete mutation settled (either success or failure)');
+      },
+    }
+  );
+};

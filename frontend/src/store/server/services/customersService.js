@@ -15,3 +15,7 @@ export const updateCustomer =  (data) => {
     return  privateRequest.put(`${CUSTOMER}/${data?.id}`, data);
 };
 
+export const deleteCustomer =  (id) => {
+    return  privateRequest.delete(`${CUSTOMER}/${id}`);
+};
+

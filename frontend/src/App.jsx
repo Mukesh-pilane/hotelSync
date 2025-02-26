@@ -5,8 +5,8 @@ import {
 } from "react-router-dom";
 import { useState } from "react";
 import { MantineProvider } from '@mantine/core';
-import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import { ModalsProvider } from '@mantine/modals';
 import { paths } from './utility/constants';
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
@@ -67,7 +67,7 @@ function App() {
           fontFamily: 'Open Sans, sans-serif',
           primaryColor: 'yellow',
         }}>
-        <ModalsProvider>
+        <ModalsProvider labels={{ confirm: 'Submit', cancel: 'Cancel' }}>
           <Notifications position="top-right" zIndex={2077} />
           <RouterProvider router={router} />
         </ModalsProvider>
