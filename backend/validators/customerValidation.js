@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 exports.validateAddCustomer = [
   body("firstName")
@@ -36,6 +36,41 @@ exports.validateAddCustomer = [
     .isNumeric()
     .withMessage("amount should be numeric"),
   
+];
+
+exports.validateUpdateCustomer = [
+  param("id")
+    .notEmpty()
+    .withMessage("customer id is required")
+    .bail()
+    .isNumeric()
+    .withMessage("customer Id should be numeric"),
+
+    body("firstName")
+    .optional()
+    .isString()
+    .withMessage("firstName should be a string")
+    .isLength({ min: 3, max: 50 })
+    .withMessage("firstName should be 3 to 50 characters long"),
+
+    body("lastName")
+      .optional()
+      .isString()
+      .withMessage("lastName should be a string")
+      .isLength({ min: 3, max: 50 })
+      .withMessage("lastName should be 3 to 50 characters long"),
+
+    body("mobile")
+      .optional()
+      .isString()
+      .withMessage('Mobile number must be a string')
+      .isLength({ min: 10, max:10 })
+      .withMessage("Mobile number must be exactly 10 digits"),
+    
+    body("amount")
+      .optional()
+      .isNumeric()
+      .withMessage("amount should be numeric"),
 ];
 
 exports.validatiAddTransaction = [

@@ -1,10 +1,11 @@
-import '@mantine/core/styles.css';
+// import '@mantine/core/styles.css';
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import { useState } from "react";
 import { MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { paths } from './utility/constants';
 import PublicRoute from './routes/PublicRoute';
@@ -66,8 +67,10 @@ function App() {
           fontFamily: 'Open Sans, sans-serif',
           primaryColor: 'yellow',
         }}>
-        <Notifications position="top-right" zIndex={2077}/>
-        <RouterProvider router={router} />
+        <ModalsProvider>
+          <Notifications position="top-right" zIndex={2077} />
+          <RouterProvider router={router} />
+        </ModalsProvider>
       </MantineProvider>
     </QueryClientProvider>
   )

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useForm } from '@mantine/form';
-import { Button, SimpleGrid, Group, NumberInput, TextInput } from '@mantine/core';
-import { useTransactionLogMutation } from '../../store/server/queries/customersQuery';
+import { Button, Group, NumberInput } from '@mantine/core';
 import { getCustomers } from '../../store/server/services/customersService';
+import { useTransactionLogMutation } from '../../store/server/queries/transactionQuery';
 
 const initialValues = {
     mobile: '',
@@ -11,7 +11,7 @@ const initialValues = {
 
 const TransactionForm = ({ data, close }) => {
     const [customerId, setCustomerId] = useState('')
-    const { mutate: addTransactionMutation, isError, error } = useTransactionLogMutation();
+    const { mutate: addTransactionMutation } = useTransactionLogMutation();
 
     const modifiedData = data?.id ? data : initialValues;
     const form = useForm({
@@ -24,10 +24,10 @@ const TransactionForm = ({ data, close }) => {
 
 
     const handleNumerChange = async (val) => {
-        if(`${val}`.length===10){
+        if (`${val}`.length === 10) {
             try {
-               const res = await getCustomers({mobile:val})
-               setCustomerId(res.data.data[0].id)
+                const res = await getCustomers({ mobile: val, perPage: 1 })
+                setCustomerId(res.data.data?.length ? res.data.data[0].id : null)
             } catch (error) {
                 console.log('error', error)
             }
@@ -36,7 +36,7 @@ const TransactionForm = ({ data, close }) => {
 
 
     const handleSubmit = async (values) => {
-            addTransactionMutation({ amount:values.amount, customerId}, {onSuccess:close});
+        addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
     };
 
     return (

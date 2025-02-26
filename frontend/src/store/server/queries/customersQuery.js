@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { addCustomer, addTransactionLog, getCustomers } from '../services/customersService';
+import { addCustomer, getCustomers, updateCustomer } from '../services/customersService';
 import { showSuccessNotification } from '../../../utility/notification';
 
 // **1. useGetCustomerQuery** for fetching customer data
@@ -48,28 +48,30 @@ export const useAddCustomerMutation = () => {
   );
 };
 
-
-// **2. useAddHotelMutation** - Adding a hotel
-export const useTransactionLogMutation = () => {
+// **3. useUpdateCustomerMutation** for updating an existing customer
+export const useUpdateCustomerMutation = () => {
   const queryClient = useQueryClient(); // Access to the query client for cache management
 
   return useMutation(
-    async (hotelData) => {
-      const res = await addTransactionLog(hotelData); // Call to add a new hotel
-      return res.data; // Return the added hotel data
+    async (updatedData) => {
+      const res = await updateCustomer(updatedData); // Call to update the customer data
+      return res.data; // Return the updated customer data
     },
     {
       onSuccess: (data) => {
-        showSuccessNotification("Customer Added successfully")
-        queryClient.invalidateQueries('customers'); // Invalidate the hotels query to refetch data
+        showSuccessNotification("Customer updated successfully");
+        queryClient.invalidateQueries('customers'); // Invalidate and refetch customers query after successful mutation
       },
       onError: (error) => {
-        console.error('Error adding hotel:', error); // Error logging
-        // You might want to show a toast or UI feedback here
+        console.error('Error updating customer:', error); // Error logging
+        // Optionally display a toast or alert for error feedback
       },
       onSettled: () => {
-        // Optionally refetch the hotels or trigger any other action after mutation
+        // Optionally refetch data or perform cleanup actions
+        console.log('Update mutation settled (either success or failure)');
       },
     }
   );
 };
+
+

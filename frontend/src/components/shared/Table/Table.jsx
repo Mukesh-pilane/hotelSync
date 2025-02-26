@@ -17,17 +17,11 @@ const Table = (props) => {
     paginationDisplayMode: 'pages',
     enableStickyHeader: true,
     mantineTableContainerProps: { sx: { height: 'calc(100vh - 20rem)' } },
-    ...tableSetting
+    ...tableSetting,
   });
 
-  const handleSaveRow = ()=>{
-
-  }
   return <MantineReactTable
     table={table}
-    editDisplayMode="modal" //default
-    enableEditing
-    onEditingRowSave={handleSaveRow}
   />;
 };
 

@@ -1,24 +1,27 @@
 import React, { useState } from 'react'
 import { useForm } from '@mantine/form';
 import { Button, Group, NumberInput, TextInput } from '@mantine/core';
-import { useAddCustomerMutation, useTransactionLogMutation } from '../../store/server/queries/customersQuery';
+import { useAddCustomerMutation, useUpdateCustomerMutation } from '../../store/server/queries/customersQuery';
 import { getCustomers } from '../../store/server/services/customersService';
+import { useTransactionLogMutation } from '../../store/server/queries/transactionQuery';
 
 const initialValues = {
-    mobile:""
+    mobile: ""
 };
 
 const CustomerForm = ({ data, close }) => {
 
-    const { mutate: addCustomerMutation, isError, error } = useAddCustomerMutation();
+    const { mutate: addCustomerMutation } = useAddCustomerMutation();
     const { mutate: addTransactionMutation } = useTransactionLogMutation();
+    const { mutate: updateCustomerMutation } = useUpdateCustomerMutation();
 
     const [customerId, setCustomerId] = useState('')
-    const modifiedData = data?.id ? data : initialValues;
+    const modifiedData = data?.id ? { ...data, mobile: Number(data.mobile) } : initialValues;
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: modifiedData,
     });
+
 
     const handleNumerChange = async (val) => {
 
@@ -37,10 +40,14 @@ const CustomerForm = ({ data, close }) => {
 
 
     const handleSubmit = async (values) => {
-        if (customerId) {
-            addTransactionMutation({ amount: values.amount, customerId },  {onSuccess:close});
+        if (data?.id) {
+            updateCustomerMutation({ ...values, mobile: `${values.mobile}`}, { onSuccess: close })
         } else {
-            addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 },  {onSuccess:close});
+            if (customerId) {
+                addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
+            } else {
+                addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 }, { onSuccess: close });
+            }
         }
     };
 
@@ -57,6 +64,7 @@ const CustomerForm = ({ data, close }) => {
                 onChange={handleNumerChange}
                 hideControls
                 maxLength={10}
+                type='number'
             />
             {
                 customerId ?
@@ -83,14 +91,19 @@ const CustomerForm = ({ data, close }) => {
                             key={form.key('lastName')}
                             {...form.getInputProps('lastName')}
                         />
-                        <NumberInput
-                            withAsterisk
-                            label="Amount"
-                            placeholder="1000"
-                            key={form.key('amount')}
-                            {...form.getInputProps('amount')}
-                            hideControls
-                        />
+                        {
+                            !data?.id &&
+                            <NumberInput
+                                withAsterisk
+                                label="Amount"
+                                placeholder="1000"
+                                key={form.key('amount')}
+                                {...form.getInputProps('amount')}
+                                hideControls
+                                type='number'
+                            />
+                        }
+
                     </>
 
             }
