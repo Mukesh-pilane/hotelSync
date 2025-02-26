@@ -200,3 +200,160 @@ exports.retriveTransactions = async (hotelId) => {
         data: transactionData
     }
 }
+
+exports.modifyTransactions = async (transactionId, body) => {
+    const transaction = await db.sequelize.transaction();
+    // find transaction logs
+    const transactionData = await db.transaction_logs.findOne({
+        where: {
+            id: transactionId,
+            deletedAt: null
+        }
+    });
+    if(!transactionData){
+        await transaction.rollback();
+        throw new DataNotFoundError(`Transaction with id ${transactionId} not found`);
+    }
+    const previousAmount = transactionData.amount;
+
+     // get previous token points
+     let tokenRange = await db.token_range.findOne({
+        where: {
+            startAmount: { [Op.lte]: previousAmount },
+            endAmount: { [Op.gte]: previousAmount },
+            deletedAt: null
+        },
+        order: [['startAmount', 'desc']]
+    });
+    if(!tokenRange){ 
+        tokenRange = await db.token_range.findOne({
+            where: {
+                deletedAt: null
+            },
+            order: [['startAmount', 'desc']],
+            limit: 1
+        });
+    }
+    const previouisAddedTokenPoints = tokenRange?.tokenPoints || 0;
+
+    // new amount token points
+    const newAmount = body.amount;
+    tokenRange = await db.token_range.findOne({
+        where: {
+            startAmount: { [Op.lte]: newAmount },
+            endAmount: { [Op.gte]: newAmount },
+            deletedAt: null
+        },
+        order: [['startAmount', 'desc']]
+    });
+    if(!tokenRange){ 
+        tokenRange = await db.token_range.findOne({
+            where: {
+                deletedAt: null
+            },
+            order: [['startAmount', 'desc']],
+            limit: 1
+        });
+    }
+    const newAmountTokenPoints = tokenRange?.tokenPoints || 0;
+
+    // update token points
+    const updateTokenPoints = await db.customer_token_points.update( // substract previous and add new points
+        { points: Sequelize.literal(`points - ${previouisAddedTokenPoints} + ${newAmountTokenPoints}`) },
+        { where: { customerId: transactionData.customerId }}
+    );
+    if(!updateTokenPoints){
+        await transaction.rollback();
+        throw new BadRequestError("Error While Modifying Transaction Logs.");
+    }
+
+    // modify transaction logs
+    const modifiedTransaction = await db.transaction_logs.update(
+        body,
+        {
+            where: {
+                id: transactionId,
+                deletedAt: null
+            }
+        }
+    );
+    if(!modifiedTransaction){
+        await transaction.rollback();
+        throw new BadRequestError("Error While Modifying Transaction Logs.");
+    }
+    await transaction.commit();
+    return { 
+        statusCode: 200, 
+        message: 'Transaction Data Updated Successfully',
+        data: transactionData
+    }
+}
+
+exports.removeTransaction = async (transactionId) => {
+    if(!transactionId){
+        throw new BadRequestError("Invalid Transaction Id");
+    }
+    const transaction = await db.sequelize.transaction();
+
+    // get previous transaction details
+    const transactionRecord = await db.transaction_logs.findOne({
+        where: {
+            id: transactionId,
+            deletedAt: null
+        }
+    });
+    if(!transactionRecord){
+        await transaction.rollback();
+        throw new DataNotFoundError(`Transaction with id ${id} not found.`);
+    }
+
+    const previousAmount = transactionRecord.amount;
+     // get previous token points
+     let tokenRange = await db.token_range.findOne({
+        where: {
+            startAmount: { [Op.lte]: previousAmount },
+            endAmount: { [Op.gte]: previousAmount },
+            deletedAt: null
+        },
+        order: [['startAmount', 'desc']]
+    });
+    if(!tokenRange){ 
+        tokenRange = await db.token_range.findOne({
+            where: {
+                deletedAt: null
+            },
+            order: [['startAmount', 'desc']],
+            limit: 1
+        });
+    }
+    const previouisAddedTokenPoints = tokenRange?.tokenPoints || 0;
+    console.log("transactionRecord, ", transactionRecord.customerId )
+    // update customer token points
+    const updateTokenPoints = await db.customer_token_points.update( // substract previous and add new points
+        { points: Sequelize.literal(`points - ${previouisAddedTokenPoints}`) },
+        { where: { customerId: transactionRecord.customerId }}
+    );
+    if(!updateTokenPoints){
+        await transaction.rollback();
+        throw new BadRequestError("Error While Modifying Transaction Logs.");
+    }
+
+    const deleteTransaction = await db.transaction_logs.update(
+        { deletedAt: Date.now() },
+        {
+            where: {
+                id: transactionId,
+                deletedAt: null
+            }
+        }
+    );
+    if(!deleteTransaction){
+        await transaction.rollback();
+        throw new BadRequestError("Error while deleting transaction");
+    }
+    await transaction.commit();
+    return { 
+        statusCode: 200, 
+        message: 'Transaction Deleted Successfully' 
+    }
+}
