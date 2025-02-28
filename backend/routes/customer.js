@@ -15,7 +15,7 @@ const {
     updateTransaction,
     deleteTransaction } = require('../controllers/customer');
 
-router.post('/',/* checkAuth, checkPermission,*/ validateAddCustomer, validationError, errorWrapper(insertCustomer));
+router.post('/', checkAuth,/* checkPermission,*/ validateAddCustomer, validationError, errorWrapper(insertCustomer));
 router.get('/', checkAuth,/* checkPermission,*/ errorWrapper(fetchCustomer));
 router.put('/:id', checkAuth,/* checkPermission,*/ validateUpdateCustomer, validationError,  errorWrapper(updateCustomer));
 router.delete('/:id', checkAuth/*, checkPermission*/, errorWrapper(deleteCustomer));

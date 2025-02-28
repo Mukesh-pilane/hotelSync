@@ -1,5 +1,5 @@
 const db = require('../models');
-const { DataNotFoundError, BadRequestError } = require('../utils/customError');
+const { DataNotFoundError, BadRequestError, ValidationError } = require('../utils/customError');
 const { Op, Sequelize } = require('sequelize');
 
 exports.createCustomer = async (body) => {
@@ -13,7 +13,15 @@ exports.createCustomer = async (body) => {
     if(!hotelExist){
         throw new BadRequestError(`Hotel with the id ${belongsToHotel} does not exist`);
     }
-
+    const customerExist = await db.customer.findOne({
+        where: {
+            mobile: body.mobile,
+            belongsToHotel: body.belongsToHotel
+        }
+    });
+    if(customerExist){
+        throw new ValidationError(`Customer with mobile number ${body.mobile} `);
+    }
     const addCustomer = await db.customer.create(body);
     if(!addCustomer){
         throw new BadRequestError("Error While Adding Customer");
