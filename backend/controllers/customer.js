@@ -17,6 +17,7 @@ exports.fetchCustomer = async (req, res) => {
 exports.insertCustomer = async (req, res) => {
     const body = req.body;
     body.createdBy = req.userData.id;
+    body.belongsToHotel = req.userData.hotel;
     const result = await createCustomer(body);
     res.status(200).send(result);
 }

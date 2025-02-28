@@ -103,7 +103,8 @@ exports.retriveCustomers = async (hotelId) => {
                 attributes: ['points']
             }
         ],
-        attributes: ['id', 'firstName', "lastName", "mobile", "documents"]
+        attributes: ['id', 'firstName', "lastName", "mobile", "documents"],
+        sort: { updatedAt: -1 }
     });
     return { 
         statusCode: 200, 
@@ -200,7 +201,8 @@ exports.retriveTransactions = async (hotelId) => {
                 attributes: ["firstName", "lastName", "mobile"]
             }
         ],
-        attributes: ["amount"]
+        attributes: ["amount"],
+        sort: { updatedAt: -1 }
     });
     return { 
         statusCode: 200, 
