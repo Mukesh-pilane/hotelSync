@@ -9,13 +9,12 @@ const initialValues = {
     baseTokenPoints: ''
 };
 
-const HotelSetting = ({ data, close }) => {
+const HotelSetting = () => {
     const { mutate: addHotelMutation } = useAddHotelMutation();
 
-    const modifiedData = data?.id ? data : initialValues;
     const form = useForm({
         mode: 'uncontrolled',
-        initialValues: modifiedData,
+        initialValues: initialValues,
     });
 
 
@@ -32,9 +31,10 @@ const HotelSetting = ({ data, close }) => {
             <TextInput
                 withAsterisk
                 label="Name"
-                placeholder="uncle chinese"
+                placeholder="hotel name"
                 key={form.key('name')}
                 {...form.getInputProps('name')}
+                disabled
             />
             <Textarea
                 withAsterisk
@@ -42,6 +42,7 @@ const HotelSetting = ({ data, close }) => {
                 placeholder="address"
                 key={form.key('address')}
                 {...form.getInputProps('address')}
+                disabled
             />
             <NumberInput
                 withAsterisk
