@@ -1,6 +1,7 @@
 // import '@mantine/core/styles.css';
 import {
   createBrowserRouter,
+  Navigate,
   RouterProvider,
 } from "react-router-dom";
 import { useState } from "react";
@@ -20,7 +21,7 @@ import { useAuthStore } from "./store/client/authStore";
 
 function App() {
   const [queryClientstate] = useState(() => queryClient);
-  const { userData } = useAuthStore((state) => state);
+  const { userData, isAuthenticated } = useAuthStore((state) => state);
 
   const router = createBrowserRouter([
     ...Object.values(paths?.publicRoutes)?.map((e) => {
@@ -55,7 +56,7 @@ function App() {
     },
     {
       path: "*",
-      element: <NotFound />
+      element: isAuthenticated ? <NotFound /> : <Navigate to={"/login"} />
     }
   ]);
 

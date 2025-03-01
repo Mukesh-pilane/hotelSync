@@ -6,6 +6,7 @@ const PrivateRoute = ({ component: Component }) => {
     const { isAuthenticated } = useAuthStore((state) => state);
 
     if (!isAuthenticated) {
+        console.log("here")
         return <Navigate to={"/login"} />;
     }
     return <Component />;

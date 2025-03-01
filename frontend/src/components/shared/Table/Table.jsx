@@ -16,7 +16,7 @@ const Table = (props) => {
     },
     paginationDisplayMode: 'pages',
     enableStickyHeader: true,
-    mantineTableContainerProps: { sx: { height: 'calc(100vh - 20rem)' } },
+    mantineTableContainerProps: { sx: { maxHeight: 'calc(100vh - 17rem)' } },
     ...tableSetting,
   });
 

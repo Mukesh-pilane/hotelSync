@@ -118,7 +118,11 @@ const Users = () => {
           ),
         }}
       />
-      <CustomModal title="Customer" opened={opened} close={close}>
+      <CustomModal title="Customer" opened={opened}
+        close={() => {
+          setEditData({})
+          close()
+        }}>
         <CustomerForm data={editData} close={close} />
       </CustomModal>
       <CustomModal title="Customer" opened={transactionOpened} close={transactionClose}>

@@ -33,7 +33,7 @@ export default function SideBar() {
       size="xs"
       withCloseButton={false}
       className={matches ? classes.navbar : ''}
-      pt="3px"
+      style={{paddingTop: 0}}
     >
       <div className={classes.header}>
         <Group justify="space-between">

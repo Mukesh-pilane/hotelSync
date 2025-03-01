@@ -4,10 +4,14 @@ import { Button, Group, NumberInput, TextInput } from '@mantine/core';
 import { useAddCustomerMutation, useUpdateCustomerMutation } from '../../store/server/queries/customersQuery';
 import { getCustomers } from '../../store/server/services/customersService';
 import { useTransactionLogMutation } from '../../store/server/queries/transactionQuery';
+import { z } from 'zod';
+import { zodResolver } from 'mantine-form-zod-resolver';
 
 const initialValues = {
     mobile: ""
 };
+
+
 
 const CustomerForm = ({ data, close }) => {
 
@@ -17,13 +21,25 @@ const CustomerForm = ({ data, close }) => {
 
     const [customerId, setCustomerId] = useState('')
     const modifiedData = data?.id ? { ...data, mobile: Number(data.mobile) } : initialValues;
+
+    const schema = z.object({
+        mobile: z.number().min(10, { message: 'Mobile must have at least 10 characters' }),
+        amount: z.number().min(1, { message: 'Amount is required' }),
+        firstName: z.string().min(3, { message: 'First name must have at least 3 characters' }),
+        lastName: z.string().min(3, { message: 'Last name must have at least 3 characters' }),
+    });
+
     const form = useForm({
-        mode: 'uncontrolled',
+        mode: 'controlled',
         initialValues: modifiedData,
+        validate: zodResolver(schema),
     });
 
 
     const handleNumerChange = async (val) => {
+        if (`${val}`.length > 10) {
+            return;
+        }
 
         if (`${val}`.length === 10) {
             try {
@@ -41,14 +57,15 @@ const CustomerForm = ({ data, close }) => {
 
     const handleSubmit = async (values) => {
         if (data?.id) {
-            updateCustomerMutation({ ...values, mobile: `${values.mobile}`}, { onSuccess: close })
+            updateCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close })
         } else {
             if (customerId) {
-                addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
+                await addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
             } else {
-                addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 }, { onSuccess: close });
+                await addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 }, { onSuccess: close });
             }
         }
+        form.setSubmitting(false)
     };
 
     return (
@@ -61,6 +78,7 @@ const CustomerForm = ({ data, close }) => {
                 placeholder="+91"
                 key={form.key('mobile')}
                 {...form.getInputProps('mobile')}
+                value={form.values.mobile}
                 onChange={handleNumerChange}
                 hideControls
                 maxLength={10}
@@ -107,9 +125,9 @@ const CustomerForm = ({ data, close }) => {
                     </>
 
             }
-
+            {console.log('form.submitting ', form.submitting)}
             <Group justify="flex-end" mt="md">
-                <Button type="submit">Submit</Button>
+                <Button type="submit" disabled={form.submitting}>Submit</Button>
             </Group>
         </form>
     )

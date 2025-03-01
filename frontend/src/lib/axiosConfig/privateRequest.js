@@ -39,40 +39,45 @@ const responseErrorHandler = (error) => {
 
   if (error.response) {
     const { status, data: { message } } = error.response
+    console.log('status', status)
 
     switch (status) {
       case 401:
-        showErrorNotification(`Error ${status}`,"Token Expired! Please Login again")
+        showErrorNotification(`Error ${status}`, "Token Expired! Please Login again")
         setTimeout(() => {
           window.location = '/';
           clearToken()
         }, 1000)
         break;
       case 400:
-        showErrorNotification(`Error ${status}`,message || "Inavalid Input/ Bad Request")
+        showErrorNotification(`Error ${status}`, message || "Inavalid Input/ Bad Request")
         break;
       case 403:
-        showErrorNotification(`Error ${status}`,message || "Access Denied/ Forbidden")
+        showErrorNotification(`Error ${status}`, message || "Access Denied/ Forbidden")
         break;
       case 404:
-        showErrorNotification(`Error ${status}`,message || "Item doesn't exist")
+        showErrorNotification(`Error ${status}`, message || "Item doesn't exist")
         break;
       case 405:
-        showErrorNotification(`Error ${status}`,message || "Invalid Request")
+        showErrorNotification(`Error ${status}`, message || "Invalid Request")
         break;
       case 422:
-        showErrorNotification(`Error ${status}`,message || "Already Exists")
+        showErrorNotification(`Error ${status}`, message || "Already Exists")
         break;
       case 504:
-        showErrorNotification(`Error ${status}`,message || "Network Error")
+        showErrorNotification(`Error ${status}`, message || "Network Error")
         break;
       default:
-        showErrorNotification(`Error ${status}`,message || "Some Error Occurred")
+        showErrorNotification(`Error ${status}`, message || "Some Error Occurred")
         break;
     }
   }
   else {
-    showErrorNotification("Error 500","Some Error Occurred")
+    if (error.code === "ERR_NETWORK") {
+      showErrorNotification(error?.message || "Network Error", "Please check your Internet connection");
+    } else if (error.code !== 'CanceledError') {
+      showErrorNotification(error?.message || "Some Error Occurred");
+    }
   }
   return Promise.reject(error)
 }

@@ -65,12 +65,9 @@ const Login = () => {
         <PasswordInput label="Password" placeholder="Your password" mt="md" size="md"
           {...form.getInputProps('password')}
         />
-        <Group justify="space-between" mt="lg">
-          <Checkbox label="Remember me" {...form.getInputProps('termsOfService', { type: 'checkbox' })} />
-          <Anchor size="sm" component={Link} to="/forgotpassword">
-            Forgot password?
-          </Anchor>
-        </Group>
+        <Anchor size="sm" component={Link} to="/forgotpassword">
+          Forgot password?
+        </Anchor>
         <Button fullWidth mt="xl" size="md" type="submit" loading={form.submitting} loaderProps={{ type: 'dots' }}>
           Login
         </Button>

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { IconLogout } from '@tabler/icons-react';
 import { IconUserHexagon } from '@tabler/icons-react';
 
@@ -7,6 +8,8 @@ import { useAuthStore } from '../../../store/client/authStore';
 
 export default function UserButton() {
   const { userData, logout } = useAuthStore((state) => state);
+  const navigate = useNavigate();
+
 
   return (
     <UnstyledButton className={classes.user}>
@@ -20,7 +23,9 @@ export default function UserButton() {
           </Text>
         </div>
         <Tooltip arrowOffset={10} arrowSize={4} label="Logout" withArrow position="right-start">
-          <IconLogout onClick={logout} size={24} stroke={1.5} />
+          <IconLogout onClick={() => {
+            logout()
+          }} size={24} stroke={1.5} />
         </Tooltip>
       </Group>
     </UnstyledButton>
