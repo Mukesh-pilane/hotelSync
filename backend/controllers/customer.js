@@ -9,8 +9,12 @@ const {
     removeTransaction } = require('../services/customer');
 
 exports.fetchCustomer = async (req, res) => {
-    const hotelId = req.userData.hotel;
-    const result = await retriveCustomers(hotelId);
+    const query = {};
+    query.hotelId = req.userData.hotel;
+    query.page = req.query.page;
+    query.limit = req.query.limit;
+    query.search = req.query.search;
+    const result = await retriveCustomers(query);
     res.status(200).send(result);
 }
 
@@ -43,8 +47,12 @@ exports.addTransaction = async (req, res) => {
 }
 
 exports.fetchTransaction = async (req, res) => {
-    const hotelId = req.userData.hotel;
-    const result = await retriveTransactions(hotelId);
+    const query = {};
+    query.hotelId = req.userData.hotel;
+    query.page = req.query.page;
+    query.limit = req.query.limit;
+    query.search = req.query.search;
+    const result = await retriveTransactions(query);
     res.status(200).send(result);
 }
 

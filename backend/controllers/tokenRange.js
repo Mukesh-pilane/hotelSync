@@ -9,7 +9,7 @@ exports.insertTokenRange = async (req, res) => {
 
 exports.fetchTokenRange = async (req, res) => {
     const hotelId = req.userData.hotel;
-    const { page, limit } = req.body;
+    const { page, limit } = req.query;
     const result = await retriveTokenRange({hotelId, page, limit});
     res.status(200).send(result);
 }
