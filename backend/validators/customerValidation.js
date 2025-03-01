@@ -39,7 +39,7 @@ exports.validateAddCustomer = [
 ];
 
 exports.validateUpdateCustomer = [
-  param("id")
+    param("id")
     .notEmpty()
     .withMessage("customer id is required")
     .bail()
@@ -66,14 +66,9 @@ exports.validateUpdateCustomer = [
       .withMessage('Mobile number must be a string')
       .isLength({ min: 10, max:10 })
       .withMessage("Mobile number must be exactly 10 digits"),
-    
-    body("amount")
-      .optional()
-      .isNumeric()
-      .withMessage("amount should be numeric"),
 ];
 
-exports.validatiAddTransaction = [
+exports.validateAddTransaction = [
   body("customerId")
     .notEmpty()
     .withMessage("customer id is required")
@@ -88,4 +83,21 @@ exports.validatiAddTransaction = [
     .isNumeric()
     .withMessage("amount should be numeric"),
 ];
+
+exports.validateUpdateTransaction = [
+  param("id")
+    .notEmpty()
+    .withMessage("Id is required")
+    .bail()
+    .isNumeric()
+    .withMessage("Id should be numeric"),
+
+  body("amount")
+    .notEmpty()
+    .withMessage("amount is required")
+    .bail()
+    .isNumeric()
+    .withMessage("amount should be numeric"),
+];
+
 

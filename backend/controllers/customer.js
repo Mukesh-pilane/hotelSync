@@ -1,4 +1,12 @@
-const { retriveCustomers, createCustomer, addTransaction, retriveTransactions, modifyCustomer, removeCustomer } = require('../services/customer');
+const { 
+    retriveCustomers, 
+    createCustomer, 
+    addTransaction, 
+    retriveTransactions, 
+    modifyCustomer, 
+    removeCustomer,
+    modifyTransactions,
+    removeTransaction } = require('../services/customer');
 
 exports.fetchCustomer = async (req, res) => {
     const query = req.query
@@ -10,6 +18,7 @@ exports.fetchCustomer = async (req, res) => {
 exports.insertCustomer = async (req, res) => {
     const body = req.body;
     body.createdBy = req.userData.id;
+    body.belongsToHotel = req.userData.hotel;
     const result = await createCustomer(body);
     res.status(200).send(result);
 }
@@ -37,6 +46,19 @@ exports.addTransaction = async (req, res) => {
 exports.fetchTransaction = async (req, res) => {
     const hotelId = req.userData.hotel;
     const result = await retriveTransactions(hotelId);
+    res.status(200).send(result);
+}
+
+exports.updateTransaction = async (req, res) => {
+    const transactionId = req.params.id;
+    const body = req.body;
+    const result = await modifyTransactions(transactionId, body);
+    res.status(200).send(result);
+}
+
+exports.deleteTransaction = async (req, res) => {
+    const transactionId = req.params.id;
+    const result = await removeTransaction(transactionId);
     res.status(200).send(result);
 }
 
