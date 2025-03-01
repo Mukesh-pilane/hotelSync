@@ -20,7 +20,7 @@ exports.createCustomer = async (body) => {
         }
     });
     if(customerExist){
-        throw new ValidationError(`Customer with mobile number ${body.mobile} `);
+        throw new ValidationError(`Customer with mobile number ${body.mobile} Already exist`);
     }
     const addCustomer = await db.customer.create(body);
     if (!addCustomer) {
