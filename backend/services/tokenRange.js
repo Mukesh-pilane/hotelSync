@@ -28,7 +28,7 @@ exports.retriveTokenRange = async (query) => {
         offset: skip,
         limit,
         order: [['startAmount', 'asc']],
-        attributes: [ 'startAmount', 'endAmount', 'tokenPoints']
+        attributes: [ 'startAmount', 'endAmount', 'tokenPoints', "hotelId"]
     });
     return {  
         statusCode: 200, 

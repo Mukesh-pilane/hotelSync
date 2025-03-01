@@ -19,7 +19,7 @@ exports.retriveHotels = async () => {
         where: {
             deleted_at: null
         },
-        attributes: ["name", "address"]
+        attributes: ["name", "address", "id"]
     });
 
     return {  

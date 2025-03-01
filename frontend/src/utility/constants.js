@@ -6,6 +6,9 @@ const DashBoard = lazy(() => import("../pages/DashBoard/DashBoard"))
 const Customer = lazy(() => import("../pages/Customer/Customer"))
 const Hotel = lazy(() => import("../pages/Hotel/Hotel"))
 const Transaction = lazy(() => import("../pages/Transaction/Transaction"))
+const TokenRange = lazy(() => import("../pages/TokenRange/TokenRange"))
+const HotelSetting = lazy(() => import("../pages/HotelSetting/HotelSetting"))
+
 import {
     // IconAdjustments,
     IconUsersGroup,
@@ -50,6 +53,16 @@ export const paths = {
                     element: Transaction, 
                     permissionKey:"transaction"
                 },
+                TokenRange:{
+                    path: "/tokenRange",
+                    element: TokenRange, 
+                    permissionKey:"settings"
+                },
+                HotelSetting:{
+                    path: "/hotelSetting",
+                    element: HotelSetting, 
+                    permissionKey:"hotelSetting"
+                },
             }
         }
     }
@@ -65,8 +78,8 @@ export const sideBarMenu = [
         permissionKey:"settings",
         icon: IconAdjustments,
         links: [
-          { label: 'Token', link: '/token' },
-        //   { label: 'User Log', link: '/userlogs' },
+          { label: 'Token', link: '/tokenRange' },
+          { label: 'Hotel Setting', link: '/hotelSetting', permissionKey:"hotelSetting" },
         ],
       },
 ]
