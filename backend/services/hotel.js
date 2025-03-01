@@ -29,17 +29,52 @@ exports.retriveHotels = async () => {
     };
 }
 
-exports.addRange = async () => {
-    const hotelData = await db.hotel.findAll({
+exports.updateHotel = async (id, body) => {
+    const hotelExist = await db.hotel.findOne({
         where: {
+            id,
             deleted_at: null
-        },
-        attributes: ["name", "address"]
+        }
     });
+    if(!hotelExist){
+        throw new DataNotFoundError(`Hotel with id ${id} not found`);
+    }
 
+    await db.hotel.update(
+        body,
+        {
+            where: {
+                id
+            }
+        }
+    );
     return {  
         statusCode: 200, 
-        message: 'Hotels Fetched Successfully',
-        data: hotelData
+        message: 'Hotels Update Successfully'
+    };
+}
+
+exports.removeHotel = async (id) => {
+    const hotelExist = await db.hotel.findOne({
+        where: {
+            id,
+            deleted_at: null
+        }
+    });
+    if(!hotelExist){
+        throw new DataNotFoundError(`Hotel with id ${id} not found`);
+    }
+
+    await db.hotel.update(
+        { deletedAt: Date.now() },
+        {
+            where: {
+                id
+            }
+        }
+    );
+    return {  
+        statusCode: 200, 
+        message: 'Hotels Deleted Successfully'
     };
 }
