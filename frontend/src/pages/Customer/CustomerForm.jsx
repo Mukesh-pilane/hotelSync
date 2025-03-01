@@ -12,9 +12,21 @@ const initialValues = {
 };
 
 
+const customerSchema = (isUpdate) => {
+    return z.object({
+        mobile: z.number().min(10, { message: 'Mobile must have at least 10 characters' }),
+        amount: isUpdate ? z.number().optional() : z.number().min(1, { message: 'Amount is required' }),
+        firstName: z.string().min(3, { message: 'First name must have at least 3 characters' }),
+        lastName: z.string().min(3, { message: 'Last name must have at least 3 characters' }),
+    });
+}
 
-const CustomerForm = ({ data, close }) => {
+const transactionSchema = z.object({
+    mobile: z.number().min(10, { message: 'Mobile must have at least 10 characters' }),
+    amount: z.number().min(1, { message: 'Amount is required' }),
+});
 
+const CustomerForm = ({ data, close, toggleLoading }) => {
     const { mutate: addCustomerMutation } = useAddCustomerMutation();
     const { mutate: addTransactionMutation } = useTransactionLogMutation();
     const { mutate: updateCustomerMutation } = useUpdateCustomerMutation();
@@ -22,17 +34,12 @@ const CustomerForm = ({ data, close }) => {
     const [customerId, setCustomerId] = useState('')
     const modifiedData = data?.id ? { ...data, mobile: Number(data.mobile) } : initialValues;
 
-    const schema = z.object({
-        mobile: z.number().min(10, { message: 'Mobile must have at least 10 characters' }),
-        amount: z.number().min(1, { message: 'Amount is required' }),
-        firstName: z.string().min(3, { message: 'First name must have at least 3 characters' }),
-        lastName: z.string().min(3, { message: 'Last name must have at least 3 characters' }),
-    });
+
 
     const form = useForm({
         mode: 'controlled',
         initialValues: modifiedData,
-        validate: zodResolver(schema),
+        validate: zodResolver(customerId ? transactionSchema : data?.id ? customerSchema(true) : customerSchema(false)),
     });
 
 
@@ -47,26 +54,30 @@ const CustomerForm = ({ data, close }) => {
                 form.setFieldValue("mobile", val)
                 setCustomerId(res.data.data[0]?.id)
             } catch (error) {
-                console.log('error', error)
+                console.error('error', error)
             }
         } else {
             setCustomerId("")
+            form.setFieldValue("mobile", val)
         }
     }
 
 
+
     const handleSubmit = async (values) => {
+        toggleLoading(true)
         if (data?.id) {
             updateCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close })
         } else {
             if (customerId) {
-                await addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
+                addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
             } else {
-                await addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 }, { onSuccess: close });
+                addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 }, { onSuccess: close });
             }
         }
-        form.setSubmitting(false)
     };
+
+
 
     return (
         <form
@@ -83,6 +94,9 @@ const CustomerForm = ({ data, close }) => {
                 hideControls
                 maxLength={10}
                 type='number'
+                onInput={(e) => {
+                    e.target.value = e.target.value.slice(0, 10);
+                }}
             />
             {
                 customerId ?
@@ -125,9 +139,8 @@ const CustomerForm = ({ data, close }) => {
                     </>
 
             }
-            {console.log('form.submitting ', form.submitting)}
             <Group justify="flex-end" mt="md">
-                <Button type="submit" disabled={form.submitting}>Submit</Button>
+                <Button disabled={!form.isDirty()} type="submit" >Submit</Button>
             </Group>
         </form>
     )

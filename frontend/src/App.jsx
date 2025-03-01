@@ -16,6 +16,8 @@ import { QueryClientProvider } from "react-query";
 import queryClient from "./queryClient";
 import { permissions } from "./utility/permission";
 import { useAuthStore } from "./store/client/authStore";
+import DeleteModal from "./components/shared/Modal/DeleteModal";
+import CustomModal from "./components/shared/Modal/CustomModal";
 
 
 
@@ -68,7 +70,7 @@ function App() {
           fontFamily: 'Open Sans, sans-serif',
           primaryColor: 'yellow',
         }}>
-        <ModalsProvider labels={{ confirm: 'Submit', cancel: 'Cancel' }}>
+        <ModalsProvider modals={{ "delete": DeleteModal, "custom": CustomModal }} labels={{ confirm: 'Submit' }}>
           <Notifications position="top-right" zIndex={2077} />
           <RouterProvider router={router} />
         </ModalsProvider>

@@ -132,6 +132,7 @@ exports.retriveCustomers = async (query, hotelId) => {
 }
 
 exports.removeCustomer = async (id) => {
+    
     if(!id){
         throw new BadRequestError("Invalid Cusomer Id");
     }
@@ -216,10 +217,10 @@ exports.retriveTransactions = async (hotelId) => {
         include: [
             {
                 model: db.customer,
-                attributes: ["firstName", "lastName", "mobile"]
+                attributes: ["id","firstName", "lastName", "mobile"]
             }
         ],
-        attributes: ["amount"],
+        attributes: ["amount", "id"],
         sort: { updatedAt: -1 }
     });
     return { 

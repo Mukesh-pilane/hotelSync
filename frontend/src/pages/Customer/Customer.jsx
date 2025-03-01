@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import Table from '../../components/shared/Table/Table'
 import { ActionIcon, Button, Flex, Menu, Text } from '@mantine/core'
 import { modals } from '@mantine/modals';
@@ -18,25 +18,37 @@ const Users = () => {
   const { data: customersData } = useGetCustomerQuery({})
   const { mutate: deleteCustomer } = useDeleteCustomerMutation();
 
-  const [opened, { open, close }] = useDisclosure(false);
   const [transactionOpened, { open: transactionOpen, close: transactionClose }] = useDisclosure(false);
-  const [editData, setEditData] = useState({});
+
 
   const openDeleteModal = (customerId) =>
-    modals.openConfirmModal({
-      title: 'Delete your profile',
+    modals.openContextModal({
+      title: 'Delete Customer',
+      modal: 'delete',
       centered: true,
-      children: (
-        <Text size="sm">
-          Are you sure you want to delete your profile? This action is destructive and you will have
-          to contact support to restore your data.
-        </Text>
-      ),
-      labels: { confirm: 'Delete account', cancel: "No don't delete it" },
-      confirmProps: { color: 'red' },
-      onConfirm: () => deleteCustomer(customerId),
+      innerProps: {
+        body: (
+          <Text size="sm">
+            Are you sure you want to delete this Customer It will delete all of his Transaction
+          </Text>
+        ),
+        submitText: "Delete",
+        handleSubmit: (closeModal) => {
+          deleteCustomer(customerId, { onSuccess: closeModal, })
+        },
+      }
     });
 
+  const customModal = (data = {}, customTitle) =>
+    modals.openContextModal({
+      title: customTitle ? customTitle : data?.id ? 'Edit Customer' : 'Add Customer',
+      modal: 'custom',
+      centered: true,
+      innerProps: {
+        body: CustomerForm,
+        data
+      }
+    });
 
   const columns = useMemo(
     () => [
@@ -78,7 +90,7 @@ const Users = () => {
               <Menu.Dropdown>
                 <Menu.Item
                   icon={<IconUserPlus size={14} />}
-                  onClick={open}>Add Customer</Menu.Item>
+                  onClick={() => customModal()}>Add Customer</Menu.Item>
                 <Menu.Item
                   icon={<IconTransactionRupee size={14} />}
                   onClick={transactionOpen}>Add Transaction</Menu.Item>
@@ -87,7 +99,7 @@ const Users = () => {
             <Flex gap="1rem"
               className={styles.btnMenu}
             >
-              <Button variant="default" onClick={open}>
+              <Button variant="default" onClick={() => customModal()}>
                 Add Customer
               </Button>
               <Button variant="default" onClick={transactionOpen}>
@@ -106,8 +118,7 @@ const Users = () => {
           renderRowActions: ({ row }) => (
             <Flex>
               <ActionIcon onClick={() => {
-                setEditData(row.original)
-                open()
+                customModal(row.original)
               }}>
                 <IconEdit />
               </ActionIcon>
@@ -118,13 +129,6 @@ const Users = () => {
           ),
         }}
       />
-      <CustomModal title="Customer" opened={opened}
-        close={() => {
-          setEditData({})
-          close()
-        }}>
-        <CustomerForm data={editData} close={close} />
-      </CustomModal>
       <CustomModal title="Customer" opened={transactionOpened} close={transactionClose}>
         <TransactionForm close={transactionClose} />
       </CustomModal>

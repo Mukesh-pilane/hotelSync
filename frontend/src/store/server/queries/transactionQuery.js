@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { showSuccessNotification } from '../../../utility/notification';
-import { addTransactionLog, getTransaction } from '../services/transactionService';
-
+import { addTransactionLog, getTransaction, deleteTransactionById, updateTransactionById } from '../services/transactionService';
 
 // **1. useGetTransactionQuery** for fetching Transaction data
 export const useGetTransactionQuery = (params) =>
@@ -9,7 +8,6 @@ export const useGetTransactionQuery = (params) =>
     ['transaction', params], // Unique key for the query
     async () => {
       const res = await getTransaction(params); // Fetching customer data
-      console.log('res', res)
       return {
         data: res.data.data, // Returning the list of customers
         totalCount: res.data.totalCount, // Total count for pagination
@@ -24,7 +22,7 @@ export const useGetTransactionQuery = (params) =>
     }
   );
 
-// **2. useAddHotelMutation** - Adding a hotel
+// **2. useTransactionLogMutation** - Adding a transaction
 export const useTransactionLogMutation = () => {
     const queryClient = useQueryClient(); // Access to the query client for cache management
 
@@ -44,6 +42,48 @@ export const useTransactionLogMutation = () => {
             },
             onSettled: () => {
                 // Optionally refetch the hotels or trigger any other action after mutation
+            },
+        }
+    );
+};
+
+// **3. useDeleteTransactionMutation** - Deleting a transaction by ID
+export const useDeleteTransactionMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation(
+        async (id) => {
+            const res = await deleteTransactionById(id);
+            return res.data;
+        },
+        {
+            onSuccess: () => {
+                showSuccessNotification("Transaction deleted successfully");
+                queryClient.invalidateQueries('transaction');
+            },
+            onError: (error) => {
+                console.error('Error deleting transaction:', error);
+            },
+        }
+    );
+};
+
+// **4. useUpdateTransactionMutation** - Updating a transaction by ID
+export const useUpdateTransactionMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation(
+        async ({ id, data }) => {
+            const res = await updateTransactionById(id, data);
+            return res.data;
+        },
+        {
+            onSuccess: () => {
+                showSuccessNotification("Transaction updated successfully");
+                queryClient.invalidateQueries('transaction');
+            },
+            onError: (error) => {
+                console.error('Error updating transaction:', error);
             },
         }
     );

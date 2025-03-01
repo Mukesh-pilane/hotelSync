@@ -1,57 +1,58 @@
-import React, { useState } from 'react'
+import React from 'react'
+import z from 'zod';
 import { useForm } from '@mantine/form';
-import { Button, Group, NumberInput } from '@mantine/core';
-import { getCustomers } from '../../store/server/services/customersService';
-import { useTransactionLogMutation } from '../../store/server/queries/transactionQuery';
+import { Button, Group, NumberInput, Select } from '@mantine/core';
+import { useTransactionLogMutation, useUpdateTransactionMutation } from '../../store/server/queries/transactionQuery';
+import { zodResolver } from 'mantine-form-zod-resolver';
+import { useGetCustomerQuery } from '../../store/server/queries/customersQuery';
 
+
+const transactionSchema = z.object({
+    customerId: z.number().min(1, { message: 'Mobile must have at least 10 characters' }),
+    amount: z.number().min(1, { message: 'Amount is required' }),
+});
 const initialValues = {
-    mobile: '',
+    customerId: '',
     amount: ''
 };
 
-const TransactionForm = ({ data, close }) => {
-    const [customerId, setCustomerId] = useState('')
+const TransactionForm = ({ data, close, toggleLoading }) => {
+    const { data: customerOptions } = useGetCustomerQuery({})
     const { mutate: addTransactionMutation } = useTransactionLogMutation();
+    const { mutate: updateTransactionMutation } = useUpdateTransactionMutation();
 
-    const modifiedData = data?.id ? data : initialValues;
+    const modifiedData = data?.id ? { ...data, customerId: Number(data?.customer?.id) } : initialValues;
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: modifiedData,
-        validate: {
-            // mobile: (value) => (/^[6-9]\d{9}$/.test(value) ? null : 'Invalid mobile number'),
-        },
+        validate: zodResolver(transactionSchema),
     });
 
 
-    const handleNumerChange = async (val) => {
-        if (`${val}`.length === 10) {
-            try {
-                const res = await getCustomers({ mobile: val, perPage: 1 })
-                setCustomerId(res.data.data?.length ? res.data.data[0].id : null)
-            } catch (error) {
-                console.log('error', error)
-            }
-        }
-    }
-
-
     const handleSubmit = async (values) => {
-        addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
+        toggleLoading()
+        if (data?.id) {
+            updateTransactionMutation({ id: data.id, data: { amount: values.amount, customerId: data?.customer?.customerId } }, { onSuccess: close, onError: toggleLoading });
+        } else {
+            addTransactionMutation(values, { onSuccess: close, onError: toggleLoading });
+        }
     };
 
     return (
         <form
             onSubmit={form.onSubmit(handleSubmit)}
             style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <NumberInput
+            <Select
                 withAsterisk
                 label="Mobile Number"
                 placeholder="+91"
-                key={form.key('mobile')}
-                {...form.getInputProps('mobile')}
-                onChange={handleNumerChange}
+                searchable
+                nothingFound="No options"
+                key={form.key('customerId')}
+                {...form.getInputProps('customerId')}
+                disabled={data?.id}
                 hideControls
-                maxLength={10}
+                data={customerOptions ? customerOptions?.data?.map((customer) => ({ value: customer.id, label: `${customer.mobile} - ${customer.firstName} ${customer.lastName}` })) : []}
             />
             <NumberInput
                 withAsterisk

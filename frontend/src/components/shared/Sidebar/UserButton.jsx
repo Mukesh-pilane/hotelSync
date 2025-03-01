@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { IconLogout } from '@tabler/icons-react';
 import { IconUserHexagon } from '@tabler/icons-react';
 
@@ -8,7 +7,6 @@ import { useAuthStore } from '../../../store/client/authStore';
 
 export default function UserButton() {
   const { userData, logout } = useAuthStore((state) => state);
-  const navigate = useNavigate();
 
 
   return (
