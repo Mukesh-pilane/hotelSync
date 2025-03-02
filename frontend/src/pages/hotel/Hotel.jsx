@@ -71,7 +71,6 @@ const Hotel = () => {
 
   return (
     <>
-      <Stack>
         <ReUsableHeader
           search={search}
           setSearch={setSearch}
@@ -104,7 +103,6 @@ const Hotel = () => {
             ),
           }}
         />
-      </Stack>
     </>
   )
 }
