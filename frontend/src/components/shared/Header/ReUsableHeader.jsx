@@ -15,7 +15,7 @@ const ReUsableHeader = (props) => {
             <Flex size="lg" justify="space-between" align="center" gap="1rem">
                 <Flex size="lg" gap=".5rem" align="center" flex={1} hiddenFrom="sm" justify='space-between'>
                     <IconLayoutSidebarLeftCollapse className={classes.sidebarMenuBtn} onClick={toggleSidebar} />
-                    <Text size='lg' fw={600} c="blue">{userData?.hotel?.name?.toUpperCase()}</Text>
+                    <Text size='lg' fw={600} c="indigo">{userData?.hotel?.name?.toUpperCase()}</Text>
                 </Flex>
                 <Group gap={5}>
                     {Component}

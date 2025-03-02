@@ -35,14 +35,18 @@ const HotelSetting = () => {
             {
                 accessorKey: 'startAmount',
                 header: 'Start Amount',
+                size: 50, //small column
+                
             },
             {
                 accessorKey: 'endAmount',
                 header: 'End Amount',
+                size: 50, //small column
             },
             {
                 accessorKey: 'tokenPoints',
                 header: 'Token Points',
+                size: 50, //small column
             },
         ],
         []
@@ -132,6 +136,15 @@ const HotelSetting = () => {
                         tableSetting={{
                             enableRowActions: true,
                             state: { isLoading: loading },
+                            enableColumnActions: false,
+                            enableColumnFilters: false,
+                            enablePagination: false,
+                            enableTopToolbar: false,
+                            mantineTableProps: {
+                                highlightOnHover: false,
+                                withColumnBorders: false,
+                                withBorder: 'light',
+                            },
                             mantineTableContainerProps: { sx: { maxHeight: 'calc(100vh - 14rem)' } },
                             renderRowActions: ({ row }) => (
                                 <Flex>
