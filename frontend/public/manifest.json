@@ -1,0 +1,28 @@
+{
+    "name": "HotelSync",
+    "short_name": "HotelSync",
+    "description": "Hotel management application",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "icons": [
+      {
+        "src": "/hoteSync.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/hoteSync.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      },
+      {
+        "src": "/hoteSync.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  }
+  
