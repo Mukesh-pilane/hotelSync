@@ -14,7 +14,6 @@ import {
     IconUsersGroup,
     IconBuilding,
     IconReceiptRupee,
-    IconAdjustments,
 } from '@tabler/icons-react';
 
 export const paths = {
@@ -70,9 +69,9 @@ export const paths = {
 
 
 export const sideBarMenu = [
-    { label: 'Customer', icon: IconUsersGroup, link: '/customer', permissionKey: "customer" },
+    { label: 'Customer logs', icon: IconUsersGroup, link: '/customer', permissionKey: "customer" },
     { label: 'Hotels', icon: IconBuilding, link: '/hotels', permissionKey: "hotel" },
-    { label: 'Transaction', icon: IconReceiptRupee, link: '/transaction', permissionKey: "transaction" },
+    { label: 'Transaction logs', icon: IconReceiptRupee, link: '/transaction', permissionKey: "transaction" },
     { label: 'Settings', icon: IconReceiptRupee, link: '/hotelSetting', permissionKey: "hotelSetting" },
     // {
     //     label: 'Settings',

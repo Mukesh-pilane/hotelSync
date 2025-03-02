@@ -1,7 +1,7 @@
 import React from 'react'
 import { useForm } from '@mantine/form';
 import { Button, Group, NumberInput, TextInput, Textarea } from '@mantine/core';
-import { useAddHotelMutation } from '../../store/server/queries/hotelQuery';
+import { useAddHotelMutation, useUpdateHotelMutation } from '../../store/server/queries/hotelQuery';
 
 const initialValues = {
     name: '',
@@ -9,8 +9,10 @@ const initialValues = {
     baseTokenPoints: ''
 };
 
-const HotelForm = ({ data, close }) => {
+const HotelForm = ({ data, close, toggleLoading }) => {
     const { mutate: addHotelMutation } = useAddHotelMutation();
+    const { mutate: updateHotelMutation } = useUpdateHotelMutation();
+
 
     const modifiedData = data?.id ? data : initialValues;
     const form = useForm({
@@ -20,9 +22,14 @@ const HotelForm = ({ data, close }) => {
 
 
     const handleSubmit = async (values) => {
-        addHotelMutation({ ...values }, {
-            onSuccess: close()
-        })
+        toggleLoading()
+        if (data?.id) {
+            updateHotelMutation({ id: data.id, data: { name: values.name, address: values.address, baseTokenPoints: values.baseTokenPoints } }, { onSuccess: close, onError: toggleLoading });
+        } else {
+            addHotelMutation({ ...values }, {
+                onSuccess: close()
+            })
+        }
     };
 
     return (
@@ -32,7 +39,7 @@ const HotelForm = ({ data, close }) => {
             <TextInput
                 withAsterisk
                 label="Name"
-                placeholder="uncle chinese"
+                placeholder="Hotel name"
                 key={form.key('name')}
                 {...form.getInputProps('name')}
             />

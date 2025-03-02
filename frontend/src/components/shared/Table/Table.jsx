@@ -5,24 +5,23 @@ import {
 
 
 const Table = (props) => {
-  const { data, columns, isLoading, tableSetting } = props
+  const { data, columns, tableSetting } = props
 
-  console.log('isLoading', isLoading)
-  console.log('data', data)
 
   const table = useMantineReactTable({
     columns,
-    data,
-    state: { isLoading: isLoading },
+    data: data || [],
     mantinePaginationProps: {
-      rowsPerPageOptions: ['5', '10'],
+      rowsPerPageOptions: ['10', "15", "20", "25", "50", "100"],
       withEdges: false, //note: changed from `showFirstLastButtons` in v1.0
     },
+    positionActionsColumn: "last",
+    initialState: { density: 'xs' },
     paginationDisplayMode: 'pages',
     enableStickyHeader: true,
     enableGlobalFilter: false, // do not scan this column during global filtering
     enableColumnFilters: false, // do not scan this column during column filtering
-    mantineTableContainerProps: { sx: { height: 'calc(100vh - 17rem)' } },
+    mantineTableContainerProps: { sx: { height: 'calc(100vh - 14rem)' } },
     ...tableSetting,
   });
 

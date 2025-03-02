@@ -1,4 +1,4 @@
 export const permissions = {
-    admin: ["customer", "hotelSetting"],
+    admin: ["customer","transaction", "hotelSetting"],
     "super-admin":["dashboard", "hotel", "customer", "transaction"],
 }

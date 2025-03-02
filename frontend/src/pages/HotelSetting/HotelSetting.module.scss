@@ -1,0 +1,65 @@
+.wrapper {
+    overflow-y: auto;
+    height: calc(100vh - 4rem);
+    padding: 1rem 0;
+    padding-right: 10px;
+
+    &::-webkit-scrollbar {
+        width: 9px;
+        /* Width of the scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        /* Color of the scrollbar track */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #c6c4fb;
+        /* Color of the scrollbar thumb */
+        border-radius: 10px;
+        /* Rounded corners */
+        border: 3px solid transparent;
+        /* Adds space around the thumb */
+        background-clip: padding-box;
+        /* To show the transparent border */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        z-index: 200000 !important;
+        /* Max z-index for the scrollbar thumb */
+    }
+
+    &::-webkit-scrollbar-track {
+        z-index: 9998 !important;
+        /* Max z-index for the scrollbar track */
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr; // 50% width for each column
+        gap: 1rem;
+        // 100% height minus the height of the header
+
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 1fr; // Full width for each column on small screens
+            overflow-y: auto;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            padding: 1rem;
+            position: relative;
+            background-color: white;
+            border-radius: 5px;
+            height: fit-content;
+            box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.05), 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.1);
+
+            @media screen and (max-width: 768px) {
+                flex: 1;
+            }
+        }
+    }
+}

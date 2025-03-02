@@ -11,6 +11,7 @@ const DeleteModal = ({ context, id, innerProps }) => {
             {innerProps?.body}
             <Button
                 mt="md"
+                color="red"
                 onClick={() => {
                     toggleLoading()
                     innerProps.handleSubmit(

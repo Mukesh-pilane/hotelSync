@@ -12,9 +12,9 @@ import { IconEdit, IconTrash } from '@tabler/icons-react';
 const Transaction = () => {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 5, //customize the default page size
+        pageSize: 10, //customize the default page size
     });
-    const { data: transactionData } = useGetTransactionQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize })
+    const { data: transactionData, isLoading } = useGetTransactionQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize })
     const { mutate: deleteTransaction } = useDeleteTransactionMutation();
 
     const columns = useMemo(
@@ -46,6 +46,7 @@ const Transaction = () => {
             title: data?.id ? 'Edit Transaction' : 'Add Transaction',
             modal: 'custom',
             centered: true,
+            closeOnClickOutside: false,
             innerProps: {
                 body: TransactionForm,
                 data
@@ -59,6 +60,7 @@ const Transaction = () => {
             title: 'Delete Transaction',
             modal: 'delete',
             centered: true,
+            closeOnClickOutside: false,
             innerProps: {
                 body: (
                     <Text size="sm">
@@ -82,7 +84,7 @@ const Transaction = () => {
                             className={styles.btnMenu}
                         >
                             <Button variant="default" onClick={() => customModal()}>
-                                Add transaction
+                                <Text size="sm" fw={300}>Add Transaction</Text>
                             </Button>
                         </Flex>
                     </>
@@ -92,16 +94,15 @@ const Transaction = () => {
             <Table
                 columns={columns}
                 data={transactionData?.data || []}
-                isLoading={transactionData?.data === undefined}
                 tableSetting={{
                     enableRowActions: true,
                     manualPagination: true,
                     rowCount: transactionData?.total,
                     onPaginationChange: setPagination,
-                    state: { pagination },
+                    state: { pagination, isLoading },
                     renderRowActions: ({ row }) => (
                         <Flex>
-                            <ActionIcon onClick={() => {
+                            <ActionIcon color='primary' onClick={() => {
                                 customModal(row.original)
                             }}>
                                 <IconEdit />

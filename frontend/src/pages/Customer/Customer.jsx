@@ -2,18 +2,13 @@ import React, { useMemo, useState } from 'react'
 import Table from '../../components/shared/Table/Table'
 import {
   ActionIcon, Button, Flex,
-  //  Menu,
   Text
 } from '@mantine/core'
 import { modals } from '@mantine/modals';
 import {
   IconEdit,
-  // IconSettings,
   IconTrash
 } from '@tabler/icons-react';
-// import { IconUserPlus } from '@tabler/icons-react';
-// import { IconTransactionRupee } from '@tabler/icons-react';
-// import styles from "./Custmer.module.scss"
 import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
 import { useNavigate } from 'react-router-dom';
 import CustomerForm from './CustomerForm'
@@ -23,9 +18,9 @@ import { useDeleteCustomerMutation, useGetCustomerQuery } from '../../store/serv
 const Users = () => {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 5, //customize the default page size
+    pageSize: 10, //customize the default page size
   });
-  const { data: customersData } = useGetCustomerQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize });
+  const { data: customersData, isLoading } = useGetCustomerQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize });
   const { mutate: deleteCustomer } = useDeleteCustomerMutation();
   const navigate = useNavigate();
 
@@ -35,6 +30,7 @@ const Users = () => {
     modals.openContextModal({
       title: 'Delete Customer',
       modal: 'delete',
+      closeOnClickOutside: false,
       centered: true,
       innerProps: {
         body: (
@@ -54,6 +50,7 @@ const Users = () => {
       title: customTitle ? customTitle : data?.id ? 'Edit Customer' : 'Add Customer',
       modal: 'custom',
       centered: true,
+      closeOnClickOutside: false,
       innerProps: {
         body: CustomerForm,
         data,
@@ -92,24 +89,9 @@ const Users = () => {
       <ReUsableHeader
         Component={
           <>
-            {/* <Menu
-              className={styles.menuDropDown}
-              shadow="md" width={200} position="bottom-end" visbleFrom="sm">
-              <Menu.Target>
-                <IconSettings />
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item
-                  icon={<IconUserPlus size={14} />}
-                  onClick={() => customModal()}>Add Customer</Menu.Item>
-                <Menu.Item
-                  icon={<IconTransactionRupee size={14} />}
-                  onClick={transactionOpen}>Add Transaction</Menu.Item>
-              </Menu.Dropdown>
-            </Menu> */}
             <Flex gap="1rem">
               <Button variant="default" onClick={() => customModal()}>
-                Add Customer
+                <Text size="sm" fw={300}>Add Customer</Text>
               </Button>
             </Flex>
           </>
@@ -117,17 +99,16 @@ const Users = () => {
       />
       <Table
         columns={columns}
-        data={customersData?.data || []}
-        isLoading={customersData === undefined}
+        data={customersData?.data}
         tableSetting={{
           enableRowActions: true,
           manualPagination: true,
           rowCount: customersData?.total,
           onPaginationChange: setPagination,
-          state: { pagination },
+          state: { pagination, isLoading },
           renderRowActions: ({ row }) => (
             <Flex>
-              <ActionIcon onClick={() => {
+              <ActionIcon color='primary' onClick={() => {
                 customModal(row.original)
               }}>
                 <IconEdit />
