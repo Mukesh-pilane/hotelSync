@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { modals } from '@mantine/modals';
 import { ActionIcon, Button, Flex, Text } from '@mantine/core'
 import TransactionForm from './TransactionForm'
@@ -10,7 +10,11 @@ import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 
 const Transaction = () => {
-    const { data: transactionData } = useGetTransactionQuery({})
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 5, //customize the default page size
+    });
+    const { data: transactionData } = useGetTransactionQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize })
     const { mutate: deleteTransaction } = useDeleteTransactionMutation();
 
     const columns = useMemo(
@@ -34,8 +38,8 @@ const Transaction = () => {
         ],
         []
     );
-    
-    
+
+
 
     const customModal = (data = {}) =>
         modals.openContextModal({
@@ -47,6 +51,8 @@ const Transaction = () => {
                 data
             }
         });
+
+
 
     const openDeleteModal = (transactionId) =>
         modals.openContextModal({
@@ -82,12 +88,17 @@ const Transaction = () => {
                     </>
                 }
             />
+
             <Table
                 columns={columns}
                 data={transactionData?.data || []}
-                isLoading={transactionData === undefined}
+                isLoading={transactionData?.data === undefined}
                 tableSetting={{
                     enableRowActions: true,
+                    manualPagination: true,
+                    rowCount: transactionData?.total,
+                    onPaginationChange: setPagination,
+                    state: { pagination },
                     renderRowActions: ({ row }) => (
                         <Flex>
                             <ActionIcon onClick={() => {

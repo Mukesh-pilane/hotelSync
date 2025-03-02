@@ -26,11 +26,10 @@ const transactionSchema = z.object({
     amount: z.number().min(1, { message: 'Amount is required' }),
 });
 
-const CustomerForm = ({ data, close, toggleLoading }) => {
+const CustomerForm = ({ data, close, toggleLoading, handleNavigate }) => {
     const { mutate: addCustomerMutation } = useAddCustomerMutation();
     const { mutate: addTransactionMutation } = useTransactionLogMutation();
     const { mutate: updateCustomerMutation } = useUpdateCustomerMutation();
-
     const [customerId, setCustomerId] = useState('')
     const modifiedData = data?.id ? { ...data, mobile: Number(data.mobile) } : initialValues;
 
@@ -50,7 +49,7 @@ const CustomerForm = ({ data, close, toggleLoading }) => {
 
         if (`${val}`.length === 10) {
             try {
-                const res = await getCustomers({ mobile: val })
+                const res = await getCustomers({ search: val })
                 form.setFieldValue("mobile", val)
                 setCustomerId(res.data.data[0]?.id)
             } catch (error) {
@@ -71,6 +70,7 @@ const CustomerForm = ({ data, close, toggleLoading }) => {
         } else {
             if (customerId) {
                 addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
+                handleNavigate()
             } else {
                 addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 }, { onSuccess: close });
             }

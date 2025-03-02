@@ -18,6 +18,7 @@ const tokenRangeSchema = (tokenData) => z.object({
     message: 'endAmount must be greater than startAmount',
     path: ['endAmount'], // the error will be associated with endAmount field
 }).refine(data => {
+    if (!tokenData) return true; // Allow if tokenData is undefined
     // Check if the new range is fully contained or overlaps any existing ranges
     for (const range of tokenData) {
         if (
@@ -37,15 +38,15 @@ const tokenRangeSchema = (tokenData) => z.object({
 
 const initialValues = {
     hotelId: '',
-    startAmount: 20,
-    endAmount: 1000,
-    tokenPoints: 1000,
+    startAmount: "",
+    endAmount: "",
+    tokenPoints: "",
 };
 
 
 const TokenRangeForm = ({ data, close, toggleLoading }) => {
     const { userData } = useAuthStore((state) => state);
-    const { data: tokenRangeData } = useGetTokenRangeQuery({ hotelId: userData?.hotel?.id, limit: 10000, page: 1 });
+    const { data: tokenRangeData } = useGetTokenRangeQuery({ hotelId: userData?.hotel?.id, limit: -1, page: 1 });
 
     const { data: hotleOptions } = useGetHotelQuery({})
 
@@ -56,11 +57,10 @@ const TokenRangeForm = ({ data, close, toggleLoading }) => {
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: modifiedData,
-        validate: zodResolver(tokenRangeSchema(tokenRangeData)),
+        validate: zodResolver(tokenRangeSchema(tokenRangeData?.data)),
     });
 
 
-    console.log('form?.values', form?.values)
     const handleSubmit = async (values) => {
         toggleLoading()
         if (data?.id) {
@@ -110,13 +110,7 @@ const TokenRangeForm = ({ data, close, toggleLoading }) => {
                 {...form.getInputProps('endAmount')}
                 hideControls
             />
-            {/* <Text size="sm">Token Range</Text>
-            <RangeSlider
-                thumbSize={14}
-                mt="xl"
-                maxRange={200000}
-                max={200000}
-                defaultValue={[form.values?.startAmount, form.values?.endAmount]} /> */}
+            
             <Group justify="flex-end" mt="md">
                 <Button type="submit">Submit</Button>
             </Group>

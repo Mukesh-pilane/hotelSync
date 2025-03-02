@@ -1,24 +1,34 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Table from '../../components/shared/Table/Table'
-import { ActionIcon, Button, Flex, Menu, Text } from '@mantine/core'
+import {
+  ActionIcon, Button, Flex,
+  //  Menu,
+  Text
+} from '@mantine/core'
 import { modals } from '@mantine/modals';
-import { useDisclosure } from '@mantine/hooks'
-import { IconEdit, IconSettings, IconTrash } from '@tabler/icons-react';
-import { IconUserPlus } from '@tabler/icons-react';
-import { IconTransactionRupee } from '@tabler/icons-react';
-import styles from "./Custmer.module.scss"
+import {
+  IconEdit,
+  // IconSettings,
+  IconTrash
+} from '@tabler/icons-react';
+// import { IconUserPlus } from '@tabler/icons-react';
+// import { IconTransactionRupee } from '@tabler/icons-react';
+// import styles from "./Custmer.module.scss"
 import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
-import CustomModal from '../../components/shared/Modal/Modal'
+import { useNavigate } from 'react-router-dom';
 import CustomerForm from './CustomerForm'
 import { useDeleteCustomerMutation, useGetCustomerQuery } from '../../store/server/queries/customersQuery'
-import TransactionForm from '../Transaction/TransactionForm'
 
 
 const Users = () => {
-  const { data: customersData } = useGetCustomerQuery({})
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5, //customize the default page size
+  });
+  const { data: customersData } = useGetCustomerQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize });
   const { mutate: deleteCustomer } = useDeleteCustomerMutation();
+  const navigate = useNavigate();
 
-  const [transactionOpened, { open: transactionOpen, close: transactionClose }] = useDisclosure(false);
 
 
   const openDeleteModal = (customerId) =>
@@ -46,7 +56,8 @@ const Users = () => {
       centered: true,
       innerProps: {
         body: CustomerForm,
-        data
+        data,
+        handleNavigate: () => navigate('/transaction')
       }
     });
 
@@ -81,7 +92,7 @@ const Users = () => {
       <ReUsableHeader
         Component={
           <>
-            <Menu
+            {/* <Menu
               className={styles.menuDropDown}
               shadow="md" width={200} position="bottom-end" visbleFrom="sm">
               <Menu.Target>
@@ -95,15 +106,10 @@ const Users = () => {
                   icon={<IconTransactionRupee size={14} />}
                   onClick={transactionOpen}>Add Transaction</Menu.Item>
               </Menu.Dropdown>
-            </Menu>
-            <Flex gap="1rem"
-              className={styles.btnMenu}
-            >
+            </Menu> */}
+            <Flex gap="1rem">
               <Button variant="default" onClick={() => customModal()}>
                 Add Customer
-              </Button>
-              <Button variant="default" onClick={transactionOpen}>
-                Add transaction
               </Button>
             </Flex>
           </>
@@ -115,6 +121,10 @@ const Users = () => {
         isLoading={customersData === undefined}
         tableSetting={{
           enableRowActions: true,
+          manualPagination: true,
+          rowCount: customersData?.total,
+          onPaginationChange: setPagination,
+          state: { pagination },
           renderRowActions: ({ row }) => (
             <Flex>
               <ActionIcon onClick={() => {
@@ -129,9 +139,6 @@ const Users = () => {
           ),
         }}
       />
-      <CustomModal title="Customer" opened={transactionOpened} close={transactionClose}>
-        <TransactionForm close={transactionClose} />
-      </CustomModal>
     </>
   )
 }

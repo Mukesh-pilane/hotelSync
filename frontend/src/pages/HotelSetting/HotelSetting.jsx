@@ -6,12 +6,10 @@ import Table from '../../components/shared/Table/Table';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { useDeleteTokenRangeMutation, useGetTokenRangeQuery } from '../../store/server/queries/tokenRangeQuery';
 import TokenRangeForm from './TokenRangeForm';
-import { useAuthStore } from '../../store/client/authStore';
 
 
 const HotelSetting = () => {
-    const { userData } = useAuthStore((state) => state);
-    const { data: tokenRangeData } = useGetTokenRangeQuery({hotelId: userData?.hotel?.id});
+    const { data: tokenRangeData } = useGetTokenRangeQuery({});
     const { mutate: deleteTransaction } = useDeleteTokenRangeMutation();
 
     const columns = useMemo(
@@ -66,14 +64,12 @@ const HotelSetting = () => {
         <>
             <ReUsableHeader
                 Component={
-                    <>
-                        <Flex gap="1rem"
-                        >
-                            <Button variant="default" onClick={() => customModal()}>
-                                Add transaction
-                            </Button>
-                        </Flex>
-                    </>
+                    <Flex gap="1rem"
+                    >
+                        <Button variant="default" onClick={() => customModal()}>
+                            Add Token Range
+                        </Button>
+                    </Flex>
                 }
             />
             <Table

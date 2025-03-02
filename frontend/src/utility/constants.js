@@ -15,7 +15,7 @@ import {
     IconBuilding,
     IconReceiptRupee,
     IconAdjustments,
-  } from '@tabler/icons-react';
+} from '@tabler/icons-react';
 
 export const paths = {
     publicRoutes: {
@@ -36,32 +36,32 @@ export const paths = {
                 dashBoard: {
                     path: "/dashboard",
                     element: DashBoard,
-                    permissionKey:"dashboard"
+                    permissionKey: "dashboard"
                 },
-                users:{
+                users: {
                     path: "/customer",
-                    element: Customer, 
-                    permissionKey:"customer"
+                    element: Customer,
+                    permissionKey: "customer"
                 },
-                Hotel:{
+                Hotel: {
                     path: "/hotels",
-                    element: Hotel, 
-                    permissionKey:"hotel"
+                    element: Hotel,
+                    permissionKey: "hotel"
                 },
-                Transaction:{
+                Transaction: {
                     path: "/transaction",
-                    element: Transaction, 
-                    permissionKey:"transaction"
+                    element: Transaction,
+                    permissionKey: "transaction"
                 },
-                TokenRange:{
+                TokenRange: {
                     path: "/tokenRange",
-                    element: TokenRange, 
-                    permissionKey:"settings"
+                    element: TokenRange,
+                    permissionKey: "settings"
                 },
-                HotelSetting:{
+                HotelSetting: {
                     path: "/hotelSetting",
-                    element: HotelSetting, 
-                    permissionKey:"hotelSetting"
+                    element: HotelSetting,
+                    permissionKey: "hotelSetting"
                 },
             }
         }
@@ -70,16 +70,17 @@ export const paths = {
 
 
 export const sideBarMenu = [
-    { label: 'Customer', icon: IconUsersGroup, link: '/customer', permissionKey:"customer" },
-    { label: 'Hotels', icon: IconBuilding, link: '/hotels', permissionKey:"hotel"},
-    { label: 'Transaction', icon: IconReceiptRupee, link: '/transaction', permissionKey:"transaction"},
-      {
-        label: 'Settings',
-        permissionKey:"settings",
-        icon: IconAdjustments,
-        links: [
-          { label: 'Token', link: '/tokenRange' },
-          { label: 'Hotel Setting', link: '/hotelSetting', permissionKey:"hotelSetting" },
-        ],
-      },
+    { label: 'Customer', icon: IconUsersGroup, link: '/customer', permissionKey: "customer" },
+    { label: 'Hotels', icon: IconBuilding, link: '/hotels', permissionKey: "hotel" },
+    { label: 'Transaction', icon: IconReceiptRupee, link: '/transaction', permissionKey: "transaction" },
+    { label: 'Settings', icon: IconReceiptRupee, link: '/hotelSetting', permissionKey: "hotelSetting" },
+    // {
+    //     label: 'Settings',
+    //     permissionKey: "settings",
+    //     icon: IconAdjustments,
+    //     links: [
+    //         { label: 'Token', link: '/tokenRange' },
+    //         { label: 'Hotel Setting', link: '/hotelSetting', permissionKey: "hotelSetting" },
+    //     ],
+    // },
 ]

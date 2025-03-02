@@ -91,29 +91,27 @@ exports.modifyCustomer = async (id, body) => {
     }
 }
 
-exports.retriveCustomers = async (query, hotelId) => {
-    const whereClause = {
+exports.retriveCustomers = async (query) => {
+    let page = Number(query.page) || 1;
+    let limit = Number(query.limit) || 10;
+    const skip =  (page - 1) * limit;
+    const search = query.search || "";
+    const { hotelId } = query;
+
+    const whereClause = { 
+        ...(search && {
+          [Op.or] : [
+            { firstName : { [Op.like]: `%${search}%` } },
+            { lastName : { [Op.like]: `%${search}%` } },
+            { mobile: { [Op.like]: `%${search}%` } }
+          ]
+        }),
         belongsToHotel: hotelId,
-        deletedAt: null
-    };
-    if (query) {
-        if (query.firstName) {
-            whereClause.firstName = {
-                [Op.like]: `%${query.firstName}%`
-            };
-        }
-        if (query.lastName) {
-            whereClause.lastName = {
-                [Op.like]: `%${query.lastName}%`
-            };
-        }
-        if (query.mobile) {
-            whereClause.mobile = {
-                [Op.like]: `%${query.mobile}%`
-            };
-        }
+        deletedAt: null,
     }
-    const customerData = await db.customer.findAll({
+    
+
+    const customerData = await db.customer.findAndCountAll({
         where: whereClause,
         include: [
             {
@@ -122,12 +120,15 @@ exports.retriveCustomers = async (query, hotelId) => {
             }
         ],
         attributes: ['id', 'firstName', "lastName", "mobile", "documents"],
+        offset: skip,
+        limit,
         sort: { updatedAt: -1 }
     });
     return {
         statusCode: 200,
         message: 'Customer Data Fetched Successfully',
-        data: customerData
+        total: customerData.count,
+        data: customerData.rows
     }
 }
 
@@ -208,25 +209,42 @@ exports.addTransaction = async (body) => {
     };
 }
 
-exports.retriveTransactions = async (hotelId) => {
-    const transactionData = await db.transaction_logs.findAll({
-        where: {
-            hotelId,
-            deletedAt: null
-        },
+exports.retriveTransactions = async (query) => {
+    let page = Number(query.page) || 1;
+    let limit = Number(query.limit) || 10;
+    const skip =  (page - 1) * limit;
+    const search = query.search || "";
+    const { hotelId } = query;
+
+    const whereClause = { 
+        ...(search && {
+          [Op.or] : [
+            { "$customer.first_name$" : { [Op.iLike]: `%${search}%` } },
+            { "$customer.last_name$" : { [Op.iLike]: `%${search}%` } },
+            { "$customer.mobile$": { [Op.iLike]: `%${search}%` } }
+          ]
+        }),
+        hotelId,
+        deletedAt: null,
+    }
+    const transactionData = await db.transaction_logs.findAndCountAll({
         include: [
             {
                 model: db.customer,
-                attributes: ["id", "firstName", "lastName", "mobile", ]
+                attributes: ["id", "firstName", "lastName", "mobile", ],
             }
         ],
+        where: whereClause,
+        limit,
+        offset: skip,
         attributes: ["id", "amount"],
-        sort: { updatedAt: -1 }
+        order: [['updatedAt', 'desc']],
     });
     return { 
         statusCode: 200, 
         message: 'Transaction Data Fetched Successfully',
-        data: transactionData
+        total: transactionData.count,
+        data: transactionData.rows
     }
 }
 

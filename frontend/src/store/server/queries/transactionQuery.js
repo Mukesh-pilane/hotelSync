@@ -10,7 +10,7 @@ export const useGetTransactionQuery = (params) =>
       const res = await getTransaction(params); // Fetching customer data
       return {
         data: res.data.data, // Returning the list of customers
-        totalCount: res.data.totalCount, // Total count for pagination
+        total: res.data.total, // Total count for pagination
       };
     },
     {
