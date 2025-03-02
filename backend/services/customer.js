@@ -217,10 +217,10 @@ exports.retriveTransactions = async (hotelId) => {
         include: [
             {
                 model: db.customer,
-                attributes: ["id","firstName", "lastName", "mobile"]
+                attributes: ["id", "firstName", "lastName", "mobile", ]
             }
         ],
-        attributes: ["amount", "id"],
+        attributes: ["id", "amount"],
         sort: { updatedAt: -1 }
     });
     return { 

@@ -13,7 +13,7 @@ export default function TopBar() {
     <header className={classes.header}>
       <Flex size="lg" align="center" flex={1} p="10px 20px" hiddenFrom="sm" justify='space-between'>
           <IconLayoutSidebarLeftCollapse className={classes.sidebarMenuBtn} onClick={toggleSidebar} />
-        <Text size='md' fw={600} c="blue">{userData?.hotel?.toUpperCase()}</Text>
+        <Text size='md' fw={600} c="blue">{userData?.hotel?.name?.toUpperCase()}</Text>
       </Flex>
     </header>
   );

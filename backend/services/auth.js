@@ -21,7 +21,7 @@ exports.logInService = async (body) => {
                 },
                 {
                     model: db.hotel,
-                    attributes: ['name']
+                    attributes: ['name', 'address', 'baseTokenPoints', "id"]
                 }
             ]
         });
@@ -60,7 +60,7 @@ exports.logInService = async (body) => {
         status : 200,
         message : "Logged In successfully",
         role : getUserInfo.role?.name,
-        hotel: getUserInfo.hotel?.name,
+        hotel: getUserInfo.hotel,
         token : accessToken
     }
 }

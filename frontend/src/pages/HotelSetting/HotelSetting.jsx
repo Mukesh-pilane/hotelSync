@@ -1,61 +1,102 @@
-import React from 'react'
-import { useForm } from '@mantine/form';
-import { Button, Group, NumberInput, TextInput, Textarea } from '@mantine/core';
-import { useAddHotelMutation } from '../../store/server/queries/hotelQuery';
+import React, { useMemo } from 'react'
+import { modals } from '@mantine/modals';
+import { ActionIcon, Button, Flex, Text } from '@mantine/core'
+import ReUsableHeader from '../../components/shared/Header/ReUsableHeader';
+import Table from '../../components/shared/Table/Table';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { useDeleteTokenRangeMutation, useGetTokenRangeQuery } from '../../store/server/queries/tokenRangeQuery';
+import TokenRangeForm from './TokenRangeForm';
+import { useAuthStore } from '../../store/client/authStore';
 
-const initialValues = {
-    name: '',
-    address: '',
-    baseTokenPoints: ''
-};
 
 const HotelSetting = () => {
-    const { mutate: addHotelMutation } = useAddHotelMutation();
+    const { userData } = useAuthStore((state) => state);
+    const { data: tokenRangeData } = useGetTokenRangeQuery({hotelId: userData?.hotel?.id});
+    const { mutate: deleteTransaction } = useDeleteTokenRangeMutation();
 
-    const form = useForm({
-        mode: 'uncontrolled',
-        initialValues: initialValues,
-    });
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: 'startAmount',
+                header: 'Start Amount',
+            },
+            {
+                accessorKey: 'endAmount',
+                header: 'End Amount',
+            },
+            {
+                accessorKey: 'tokenPoints',
+                header: 'Token Points',
+            },
+        ],
+        []
+    );
 
+    const customModal = (data = {}) =>
+        modals.openContextModal({
+            title: data?.id ? 'Edit Token Range' : 'Add Token Range',
+            modal: 'custom',
+            centered: true,
+            innerProps: {
+                body: TokenRangeForm,
+                data
+            }
+        });
 
-    const handleSubmit = async (values) => {
-        addHotelMutation({ ...values }, {
-            onSuccess: close()
-        })
-    };
+    const openDeleteModal = (transactionId) =>
+        modals.openContextModal({
+            title: 'Delete Transaction',
+            modal: 'delete',
+            centered: true,
+            innerProps: {
+                body: (
+                    <Text size="sm">
+                        Are you sure you want to delete this transaction
+                    </Text>
+                ),
+                submitText: "Delete",
+                handleSubmit: (closeModal) => {
+                    deleteTransaction(transactionId, { onSuccess: closeModal })
+                },
+            }
+
+        });
 
     return (
-        <form
-            onSubmit={form.onSubmit(handleSubmit)}
-            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <TextInput
-                withAsterisk
-                label="Name"
-                placeholder="hotel name"
-                key={form.key('name')}
-                {...form.getInputProps('name')}
-                disabled
+        <>
+            <ReUsableHeader
+                Component={
+                    <>
+                        <Flex gap="1rem"
+                        >
+                            <Button variant="default" onClick={() => customModal()}>
+                                Add transaction
+                            </Button>
+                        </Flex>
+                    </>
+                }
             />
-            <Textarea
-                withAsterisk
-                label="Address"
-                placeholder="address"
-                key={form.key('address')}
-                {...form.getInputProps('address')}
-                disabled
+            <Table
+                columns={columns}
+                data={tokenRangeData?.data || []}
+                isLoading={tokenRangeData === undefined}
+                tableSetting={{
+                    enableRowActions: true,
+                    renderRowActions: ({ row }) => (
+                        <Flex>
+                            <ActionIcon onClick={() => {
+                                customModal(row.original)
+                            }}>
+                                <IconEdit />
+                            </ActionIcon>
+                            <ActionIcon color="orange" onClick={() => openDeleteModal(row?.original?.id)}>
+                                <IconTrash />
+                            </ActionIcon>
+                        </Flex>
+                    ),
+                }}
             />
-            <NumberInput
-                withAsterisk
-                label="Base Token"
-                placeholder="100"
-                key={form.key('baseTokenPoints')}
-                {...form.getInputProps('baseTokenPoints')}
-                hideControls
-            />
-            <Group justify="flex-end" mt="md">
-                <Button type="submit">Submit</Button>
-            </Group>
-        </form>
+        </>
     )
 }
 

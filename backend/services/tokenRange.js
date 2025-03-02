@@ -26,9 +26,9 @@ exports.retriveTokenRange = async (query) => {
             deletedAt: null
         },
         offset: skip,
-        limit,
+        limit: limit !== -1 ? limit : undefined,  // Correctly condition the limit
         order: [['startAmount', 'asc']],
-        attributes: [ 'startAmount', 'endAmount', 'tokenPoints', "hotelId"]
+        attributes: [ 'startAmount', 'endAmount', 'tokenPoints', "hotelId", "id"]
     });
     return {  
         statusCode: 200, 
