@@ -82,6 +82,12 @@ exports.validateAddTransaction = [
     .bail()
     .isNumeric()
     .withMessage("amount should be numeric"),
+
+  body("redeemedPoints")
+    .optional()
+    .bail()
+    .isNumeric()
+    .withMessage("redeem points should be numeric"),
 ];
 
 exports.validateUpdateTransaction = [
@@ -98,6 +104,12 @@ exports.validateUpdateTransaction = [
     .bail()
     .isNumeric()
     .withMessage("amount should be numeric"),
+
+  body("redeemedPoints")
+    .optional()
+    .bail()
+    .isNumeric()
+    .withMessage("redeem points should be numeric"),
 ];
 
 

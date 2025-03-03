@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 exports.validateAddHotel = [
   body("name")
@@ -22,9 +22,21 @@ exports.validateAddHotel = [
     .withMessage("Hotel base token points is required")
     .isNumeric()
     .withMessage("Base Token Points should be the number"),
+  
+  body("redeemLimit")
+    .notEmpty()
+    .withMessage("redeem limit for token points is required")
+    .isNumeric()
+    .withMessage("redeem limit should be the number"),
 ];
 
 exports.validateModifyHotel = [
+  param("id")
+      .notEmpty()
+      .withMessage("id is required.")
+      .isNumeric()
+      .withMessage("id should be the number"),
+    
   body("name")
     .isString()
     .withMessage("Name should be a string")
@@ -40,4 +52,8 @@ exports.validateModifyHotel = [
   body("baseTokenPoints")
     .isNumeric()
     .withMessage("Base Token Points should be the number"),
+  
+  body("redeemLimit")
+    .isNumeric()
+    .withMessage("redeem limit should be the number"),
 ];

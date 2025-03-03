@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     },{
         tablename: 'role_permission',
         paranoid : true, 
-        timestamps: true 
+        timestamps: true ,
+        underscored: true,
     });
 
     rolePermission.associate = (models) => {

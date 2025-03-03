@@ -10,8 +10,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         baseTokenPoints: {
             type: DataTypes.INTEGER,
-            require: false,
-            default: 0
+            require: true,
+        },
+        redeemLimit: {
+            type: DataTypes.INTEGER,
+            require: true,
         },
         deletedAt:{
             type: DataTypes.DATE,
