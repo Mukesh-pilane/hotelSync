@@ -35,6 +35,10 @@ const Transaction = () => {
                 accessorKey: 'amount',
                 header: 'Amount',
             },
+            {
+                accessorKey: 'updatedAt',
+                header: 'Updated At',
+            },
         ],
         []
     );

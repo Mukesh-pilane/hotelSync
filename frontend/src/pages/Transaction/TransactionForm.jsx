@@ -13,6 +13,8 @@ const transactionSchema = z.object({
 });
 const initialValues = {
     customerId: '',
+    redeemPoints:"",
+    availablePoints:"",
     amount: ''
 };
 
@@ -53,6 +55,23 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
                 disabled={data?.id}
                 hideControls
                 data={customerOptions ? customerOptions?.data?.map((customer) => ({ value: customer.id, label: `${customer.mobile} - ${customer.firstName} ${customer.lastName}` })) : []}
+            />
+            <NumberInput
+                withAsterisk
+                label="Available Points"
+                placeholder="0"
+                key={form.key('availablePoints')}
+                {...form.getInputProps('availablePoints')}
+                disabled
+                hideControls
+            />
+            <NumberInput
+                withAsterisk
+                label="Redeem Points"
+                placeholder="1000"
+                key={form.key('redeemPoints')}
+                {...form.getInputProps('redeemPoints')}
+                hideControls
             />
             <NumberInput
                 withAsterisk
