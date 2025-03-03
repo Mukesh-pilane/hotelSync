@@ -5,12 +5,12 @@ const { Op, Sequelize } = require('sequelize');
 exports.createCustomer = async (body) => {
     const { belongsToHotel, amount } = body;
     const hotelExist = await db.hotel.findOne({
-        where: {
+        where:{
             id: belongsToHotel,
             deletedAt: null
         }
     });
-    if (!hotelExist) {
+    if(!hotelExist){
         throw new BadRequestError(`Hotel with the id ${belongsToHotel} does not exist`);
     }
     const customerExist = await db.customer.findOne({
@@ -23,7 +23,7 @@ exports.createCustomer = async (body) => {
         throw new ValidationError(`Customer with mobile number ${body.mobile} Already exist`);
     }
     const addCustomer = await db.customer.create(body);
-    if (!addCustomer) {
+    if(!addCustomer){
         throw new BadRequestError("Error While Adding Customer");
     }
 
@@ -31,7 +31,7 @@ exports.createCustomer = async (body) => {
     const transactionObject = {
         customerId: addCustomer.id,
         hotelId: belongsToHotel,
-        amount,
+        amount
     }
 
     await db.transaction_logs.create(transactionObject);
@@ -45,7 +45,7 @@ exports.createCustomer = async (body) => {
         },
         order: [['startAmount', 'desc']]
     });
-    if (!tokenRange) {  // if amount if greater than every range take maximim range
+    if(!tokenRange){  // if amount if greater than every range take maximim range
         tokenRange = await db.token_range.findOne({
             where: {
                 deletedAt: null
@@ -56,19 +56,19 @@ exports.createCustomer = async (body) => {
     }
 
     // totel token points
-    const tokenPoints = (hotelExist?.baseTokenPoints + tokenRange?.tokenPoints) || 0;
+    const tokenPoints = (hotelExist?.baseTokenPoints + tokenRange?.tokenPoints ) || 0;
 
     await db.customer_token_points.create({
         customerId: addCustomer.id,
         hotelId: belongsToHotel,
-        points: tokenPoints
+        points: tokenPoints 
     });
 
     // sms logic
 
-    return {
-        statusCode: 200,
-        message: 'Customer Added Successfully'
+    return { 
+        statusCode: 200, 
+        message: 'Customer Added Successfully' 
     }
 }
 
@@ -124,8 +124,8 @@ exports.retriveCustomers = async (query) => {
         limit,
         sort: { updatedAt: -1 }
     });
-    return {
-        statusCode: 200,
+    return { 
+        statusCode: 200, 
         message: 'Customer Data Fetched Successfully',
         total: customerData.count,
         data: customerData.rows
@@ -133,7 +133,6 @@ exports.retriveCustomers = async (query) => {
 }
 
 exports.removeCustomer = async (id) => {
-    
     if(!id){
         throw new BadRequestError("Invalid Cusomer Id");
     }
@@ -184,7 +183,7 @@ exports.addTransaction = async (body) => {
         },
         order: [['startAmount', 'desc']]
     });
-    if (!tokenRange) {  // if amount if greater than every range take maximim range
+    if(!tokenRange){  // if amount if greater than every range take maximim range
         tokenRange = await db.token_range.findOne({
             where: {
                 deletedAt: null

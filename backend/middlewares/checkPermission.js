@@ -1,3 +1,5 @@
+const db = require('../models');
+
 module.exports = async (req, res, next) => {
     const roleId = req.userData.role;
 
