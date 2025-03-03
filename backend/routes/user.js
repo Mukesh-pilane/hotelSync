@@ -7,7 +7,7 @@ const { validateAddUser } = require('../validators/userValidation');
 const { validationError } = require('../utils/validationError');
 const { insertUser, fetchUsers } = require('../controllers/user');
 
-router.post('/',/* checkAuth, checkPermission,*/ validateAddUser, validationError, errorWrapper(insertUser));
-router.get('/',/* checkAuth, checkPermission,*/ errorWrapper(fetchUsers));
+router.post('/', checkAuth, checkPermission, validateAddUser, validationError, errorWrapper(insertUser));
+router.get('/', checkAuth, checkPermission, errorWrapper(fetchUsers));
 
 module.exports = router;

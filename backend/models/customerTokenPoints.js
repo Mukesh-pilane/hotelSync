@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         field: 'points',
         allowNull: false,
+        validate: {
+          min: 0
+        }
       },
       deleted_at: {
         type: DataTypes.DATE,

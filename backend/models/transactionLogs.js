@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         field: 'amount',
         allowNull: false,
       },
+      redeemedPoints: {
+        type: DataTypes.INTEGER,
+        field: 'redeemed_points',
+        default: 0,
+      },
       deleted_at: {
         type: DataTypes.DATE,
         allowNull: true

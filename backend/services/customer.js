@@ -119,7 +119,7 @@ exports.retriveCustomers = async (query) => {
                 attributes: ['points']
             }
         ],
-        attributes: ['id', 'firstName', "lastName", "mobile", "documents"],
+        attributes: ['id', 'firstName', "lastName", "mobile", "documents", "updatedAt"],
         offset: skip,
         limit,
         sort: { updatedAt: -1 }
@@ -165,9 +165,12 @@ exports.removeCustomer = async (id) => {
 }
 
 exports.addTransaction = async (body) => {
+    const transaction = await db.sequelize.transaction();
     const { customerId, amount } = body;
     const insertTransactionLogs = await db.transaction_logs.create(body);
+
     if(!insertTransactionLogs){
+        await transaction.rollback();
         throw new BadRequestError("Error While Adding Transaction Logs.");
     }
 
@@ -192,19 +195,22 @@ exports.addTransaction = async (body) => {
 
     // totel token points
     const tokenPoints = tokenRange?.tokenPoints || 0;
+    const redeemedPoints = body.redeemedPoints || 0;
 
     const updateTokenPoints = await db.customer_token_points.update(
-        { points: Sequelize.literal(`points + ${tokenPoints}`) },
+        { points: Sequelize.literal(`points + ${tokenPoints} - ${redeemedPoints}`) },
         { where: { customerId }}
     );
 
     // sms logic
     if(!updateTokenPoints){
+        await transaction.rollback();
         throw new BadRequestError("Error While Adding Transaction Logs.");
     }
+    await transaction.commit();
     return {  
         statusCode: 200, 
-        message: 'Customer Logs Added Successfully'
+        message: 'Transaction Added Successfully'
     };
 }
 
@@ -230,7 +236,7 @@ exports.retriveTransactions = async (query) => {
         include: [
             {
                 model: db.customer,
-                attributes: ["id", "firstName", "lastName", "mobile", ],
+                attributes: ["id", "firstName", "lastName", "mobile", "updatedAt"],
             }
         ],
         where: whereClause,
@@ -281,6 +287,7 @@ exports.modifyTransactions = async (transactionId, body) => {
         });
     }
     const previouisAddedTokenPoints = tokenRange?.tokenPoints || 0;
+    const previousRedeemedPoints = transactionData?.redeemedPoints || 0;
 
     // new amount token points
     const newAmount = body.amount;
@@ -302,10 +309,11 @@ exports.modifyTransactions = async (transactionId, body) => {
         });
     }
     const newAmountTokenPoints = tokenRange?.tokenPoints || 0;
+    const newRedeemedPoints = body.redeemedPoints || 0;
 
     // update token points
     const updateTokenPoints = await db.customer_token_points.update( // substract previous and add new points
-        { points: Sequelize.literal(`points - ${previouisAddedTokenPoints} + ${newAmountTokenPoints}`) },
+        { points: Sequelize.literal(`points - ${previouisAddedTokenPoints} + ${previousRedeemedPoints} + ${newAmountTokenPoints} - ${newRedeemedPoints}`) },
         { where: { customerId: transactionData.customerId }}
     );
     if(!updateTokenPoints){
