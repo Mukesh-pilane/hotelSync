@@ -7,15 +7,17 @@ import styles from "./Transaction.module.scss"
 import { useDeleteTransactionMutation, useGetTransactionQuery } from '../../store/server/queries/transactionQuery';
 import Table from '../../components/shared/Table/Table';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-
+import dayjs from 'dayjs';
 
 const Transaction = () => {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10, //customize the default page size
     });
-    const { data: transactionData, isLoading } = useGetTransactionQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize })
+    const [globalFilter, setGlobalFilter] = useState('');
+    const { data: transactionData, isLoading } = useGetTransactionQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize, search: globalFilter || "" })
     const { mutate: deleteTransaction } = useDeleteTransactionMutation();
+
 
     const columns = useMemo(
         () => [
@@ -36,8 +38,11 @@ const Transaction = () => {
                 header: 'Amount',
             },
             {
-                accessorKey: 'updatedAt',
+                accessorKey: 'customer.updatedAt',
                 header: 'Updated At',
+                Cell: ({ cell }) => (
+                    cell.getValue("customer.updatedAt") ? dayjs(cell.getValue("customer.updatedAt")).format('DD MMM YYYY') : "--"
+                ),
             },
         ],
         []
@@ -100,10 +105,13 @@ const Transaction = () => {
                 data={transactionData?.data || []}
                 tableSetting={{
                     enableRowActions: true,
+                    enableGlobalFilter: true,
+                    manualFiltering: true,
+                    onGlobalFilterChange: setGlobalFilter, //hoist internal global state to your state
                     manualPagination: true,
                     rowCount: transactionData?.total,
                     onPaginationChange: setPagination,
-                    state: { pagination, isLoading },
+                    state: { pagination, isLoading, globalFilter },
                     renderRowActions: ({ row }) => (
                         <Flex>
                             <ActionIcon color='primary' onClick={() => {

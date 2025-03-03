@@ -13,14 +13,20 @@ import ReUsableHeader from '../../components/shared/Header/ReUsableHeader'
 import { useNavigate } from 'react-router-dom';
 import CustomerForm from './CustomerForm'
 import { useDeleteCustomerMutation, useGetCustomerQuery } from '../../store/server/queries/customersQuery'
-
+import dayjs from 'dayjs'
 
 const Users = () => {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10, //customize the default page size
   });
-  const { data: customersData, isLoading } = useGetCustomerQuery({ page: pagination.pageIndex + 1, limit: pagination.pageSize });
+  const [globalFilter, setGlobalFilter] = useState('');
+
+  const { data: customersData, isLoading } = useGetCustomerQuery({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+    search: globalFilter || ""
+  });
   const { mutate: deleteCustomer } = useDeleteCustomerMutation();
   const navigate = useNavigate();
 
@@ -76,7 +82,14 @@ const Users = () => {
         accessorKey: 'customer_token_point.points',
         header: 'Token',
         Cell: ({ cell }) => (
-          cell.getValue("customer_token_point")?.points ?? "--"
+          cell.getValue("customer_token_point.points") ?? "--"
+        ),
+      },
+      {
+        accessorKey: 'updatedAt',
+        header: 'Updated At',
+        Cell: ({ cell }) => (
+          cell.getValue("updatedAt") ? dayjs(cell.getValue("updatedAt")).format('DD MMM YYYY') :  "--"
         ),
       },
     ],
@@ -103,6 +116,9 @@ const Users = () => {
         tableSetting={{
           enableRowActions: true,
           manualPagination: true,
+          manualFiltering: true,
+          enableGlobalFilter: true,
+          onGlobalFilterChange: setGlobalFilter,
           rowCount: customersData?.total,
           onPaginationChange: setPagination,
           state: { pagination, isLoading },

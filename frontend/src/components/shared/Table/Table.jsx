@@ -3,7 +3,6 @@ import {
   useMantineReactTable,
 } from 'mantine-react-table';
 
-
 const Table = (props) => {
   const { data, columns, tableSetting } = props
 
@@ -21,7 +20,7 @@ const Table = (props) => {
     enableStickyHeader: true,
     enableGlobalFilter: false, // do not scan this column during global filtering
     enableColumnFilters: false, // do not scan this column during column filtering
-    mantineTableContainerProps: { sx: { height: 'calc(100vh - 14rem)' } },
+    mantineTableContainerProps: { sx: { height: 'calc(100vh - 14rem)' }},
     ...tableSetting,
   });
 

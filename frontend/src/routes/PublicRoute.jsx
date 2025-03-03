@@ -6,7 +6,7 @@ import { useAuthStore } from '../store/client/authStore';
 const PublicRoute = ({ component }) => {
     const { isAuthenticated } = useAuthStore((state) => state);
     if (isAuthenticated) {
-        return <Navigate to={"/customer"} />;
+        return <Navigate to={"/transaction"} />;
     }
     return <PublicLayout component={component} />
 };
