@@ -14,7 +14,7 @@ exports.validateAddHotel = [
     .withMessage("Hotel address is required")
     .isString()
     .withMessage("Address should be a string")
-    .isLength({ min: 3, max: 50 })
+    .isLength({ min: 3, max: 100 })
     .withMessage("Address should be 3 to 50 characters long"),
 
   body("baseTokenPoints")
