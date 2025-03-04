@@ -1,3 +1,5 @@
+const db = require('../models');
+
 module.exports = async (req, res, next) => {
     const roleId = req.userData.role;
 
@@ -13,7 +15,7 @@ module.exports = async (req, res, next) => {
         return res.status(401).json({ message: "Permission Not Found "});
     }
 
-    const rolerPermission = db.role_permission.findOne({
+    const rolerPermission = await db.role_permission.findOne({
         where: {
             roleId,
             permissionId: userPermission.id,
