@@ -18,7 +18,7 @@ exports.retriveHotels = async () => {
         where: {
             deleted_at: null
         },
-        attributes: ["name", "address", "id", "baseTokenPoints"]
+        attributes: ["name", "address", "id", "baseTokenPoints", "redeemLimit"]
     });
 
     return {  
