@@ -358,7 +358,7 @@ exports.removeTransaction = async (transactionId) => {
     });
     if(!transactionRecord){
         await transaction.rollback();
-        throw new DataNotFoundError(`Transaction with id ${id} not found.`);
+        throw new DataNotFoundError(`Transaction with id ${transactionId} not found.`);
     }
 
     const previousAmount = transactionRecord.amount;
