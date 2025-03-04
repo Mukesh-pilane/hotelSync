@@ -6,7 +6,8 @@ import { useAddHotelMutation, useUpdateHotelMutation } from '../../store/server/
 const initialValues = {
     name: '',
     address: '',
-    baseTokenPoints: ''
+    baseTokenPoints: '',
+    redeemLimit:''
 };
 
 const HotelForm = ({ data, close, toggleLoading }) => {
@@ -27,7 +28,8 @@ const HotelForm = ({ data, close, toggleLoading }) => {
             updateHotelMutation({ id: data.id, data: { name: values.name, address: values.address, baseTokenPoints: values.baseTokenPoints } }, { onSuccess: close, onError: toggleLoading });
         } else {
             addHotelMutation({ ...values }, {
-                onSuccess: close()
+                onSuccess: close,
+                onError: toggleLoading
             })
         }
     };
@@ -58,8 +60,16 @@ const HotelForm = ({ data, close, toggleLoading }) => {
                 {...form.getInputProps('baseTokenPoints')}
                 hideControls
             />
+             <NumberInput
+                withAsterisk
+                label="Redeem Limit"
+                placeholder="100"
+                key={form.key('redeemLimit')}
+                {...form.getInputProps('redeemLimit')}
+                hideControls
+            />
             <Group justify="flex-end" mt="md">
-                <Button type="submit">Submit</Button>
+                <Button type="submit">{data?.id ? "Update" : "Submit" }</Button>
             </Group>
         </form>
     )

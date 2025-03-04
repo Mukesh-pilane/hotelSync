@@ -140,7 +140,7 @@ const CustomerForm = ({ data, close, toggleLoading, handleNavigate }) => {
 
             }
             <Group justify="flex-end" mt="md">
-                <Button disabled={!form.isDirty()} type="submit" >Submit</Button>
+                <Button disabled={!form.isDirty()} type="submit" >{data?.id ? "Update" : "Submit" }</Button>
             </Group>
         </form>
     )
