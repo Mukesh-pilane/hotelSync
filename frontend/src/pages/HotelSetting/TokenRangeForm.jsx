@@ -112,7 +112,7 @@ const TokenRangeForm = ({ data, close, toggleLoading }) => {
             />
             
             <Group justify="flex-end" mt="md">
-                <Button type="submit">Submit</Button>
+                <Button type="submit">{data?.id ? "Update" : "Submit" }</Button>
             </Group>
         </form>
     )

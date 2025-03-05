@@ -30,6 +30,11 @@ const Hotel = () => {
         accessorKey: 'baseTokenPoints', // Maps to the address
         header: 'Base Token Points',
       },
+      {
+        accessorKey: 'redeemLimit', // Maps to the address
+        header: 'redeemLimit',
+        enableSorting: false,
+      },
     ],
     []
   );
