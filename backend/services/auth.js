@@ -21,7 +21,7 @@ exports.logInService = async (body) => {
                 },
                 {
                     model: db.hotel,
-                    attributes: ['name', 'address', 'baseTokenPoints', "id"]
+                    attributes: ['name', 'address', 'baseTokenPoints', "id", "redeemLimit"]
                 }
             ]
         });
