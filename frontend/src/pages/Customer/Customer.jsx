@@ -53,7 +53,7 @@ const Users = () => {
 
   const customModal = (data = {}, customTitle) =>
     modals.openContextModal({
-      title: customTitle ? customTitle : data?.id ? 'Edit Customer' : 'Add Customer',
+      title: <Text fw={600}>{customTitle ? customTitle : data?.id ? 'Edit Customer' : 'Add Customer'}</Text>,
       modal: 'custom',
       centered: true,
       closeOnClickOutside: false,

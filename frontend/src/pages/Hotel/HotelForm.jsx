@@ -25,7 +25,7 @@ const HotelForm = ({ data, close, toggleLoading }) => {
     const handleSubmit = async (values) => {
         toggleLoading()
         if (data?.id) {
-            updateHotelMutation({ id: data.id, data: { name: values.name, address: values.address, baseTokenPoints: values.baseTokenPoints } }, { onSuccess: close, onError: toggleLoading });
+            updateHotelMutation({ id: data.id, data: values}, { onSuccess: close, onError: toggleLoading });
         } else {
             addHotelMutation({ ...values }, {
                 onSuccess: close,

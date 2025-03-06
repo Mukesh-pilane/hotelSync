@@ -38,6 +38,10 @@ const Transaction = () => {
                 header: 'Amount',
             },
             {
+                accessorKey: 'redeemPoints',
+                header: 'Redeem Points',
+            },
+            {
                 accessorKey: 'customer.updatedAt',
                 header: 'Updated At',
                 Cell: ({ cell }) => (
@@ -52,7 +56,7 @@ const Transaction = () => {
 
     const customModal = (data = {}) =>
         modals.openContextModal({
-            title: data?.id ? 'Edit Transaction' : 'Add Transaction',
+            title: <Text fw={600}>{data?.id ? 'Edit Transaction' : 'Add Transaction'}</Text>,
             modal: 'custom',
             centered: true,
             closeOnClickOutside: false,
