@@ -29,14 +29,13 @@ export const paths = {
     },
     privateRoutes: {
         home: {
-            path: "/",
             element: HomeLayout,
             children: {
-                dashBoard: {
-                    path: "/dashboard",
-                    element: DashBoard,
-                    permissionKey: "dashboard"
-                },
+                // dashBoard: {
+                //     path: "/dashboard",
+                //     element: DashBoard,
+                //     permissionKey: "dashboard"
+                // },
                 users: {
                     path: "/customer",
                     element: Customer,

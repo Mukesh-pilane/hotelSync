@@ -42,7 +42,11 @@ const Login = () => {
       setUserData({ mobile: values.mobile, hotel: data.hotel, role: data.role })
       setAuth({ isAuthenticated: true, userData: { mobile: values.mobile, hotel: data.hotel, role: data.role } });
     } catch (error) {
-      showErrorNotification(error.response.data.message || "Invalid Credentials")
+      if(error.response){
+        showErrorNotification(error.response?.data?.message || "Some Error Occured while log-in")
+      }else{
+        showErrorNotification(error.message)
+      }
     }
   };
 
