@@ -8,16 +8,20 @@ import { useGetCustomerQuery } from '../../store/server/queries/customersQuery';
 import { useAuthStore } from '../../store/client/authStore';
 
 
-const transactionSchema = (basePoints) => z.object({
+const transactionSchema = (redeemLimit, availablePoints) => z.object({
     customerId: z.number().min(1, { message: 'Mobile must have at least 10 characters' }),
     amount: z.number().min(0, { message: 'Amount is required' }),
-    redeemPoints: z.number().optional().refine(val => val === undefined || val >= 0, {
-        message: `Minimum redeem points are ${basePoints}`,
-      }),
+    redeemedPoints: z.number().optional()
+        .refine(val => val === undefined || val === 0 || val >= redeemLimit, {
+            message: `Minimum redeem points are ${redeemLimit}`
+        })
+        .refine(val => val === undefined  && val <= availablePoints, {
+            message: `Available points are ${availablePoints}`
+        })
 });
 const initialValues = {
     customerId: '',
-    redeemPoints: 0,
+    redeemedPoints: 0,
     availablePoints: "",
     amount: ''
 };
@@ -28,18 +32,18 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
     const { mutate: updateTransactionMutation } = useUpdateTransactionMutation();
     const { userData } = useAuthStore();
 
-    const modifiedData = data?.id ? { ...data, customerId: Number(data?.customer?.id) } : initialValues;
+    const modifiedData = data?.id ? { ...data, customerId: Number(data?.customer?.id), availablePoints: data?.customer?.customer_token_point?.points } : initialValues;
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: modifiedData,
-        validate: zodResolver(transactionSchema(userData?.hotel?.baseTokenPoints)),
+        validate: zodResolver(transactionSchema(userData?.hotel?.baseTokenPoints, data?.customer?.customer_token_point?.points || 0)),
     });
 
 
     const handleSubmit = async (values) => {
         toggleLoading()
         if (data?.id) {
-            updateTransactionMutation({ id: data.id, data: { amount: values.amount, customerId: data?.customer?.customerId } }, { onSuccess: close, onError: toggleLoading });
+            updateTransactionMutation({ id: data.id, data: { amount: values.amount, customerId: data?.customer?.customerId, redeemedPoints: values?.redeemedPoints } }, { onSuccess: close, onError: toggleLoading });
         } else {
             addTransactionMutation(values, { onSuccess: close, onError: toggleLoading });
         }
@@ -78,9 +82,8 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
                 withAsterisk
                 label="Redeem Points"
                 placeholder="1000"
-                key={form.key('redeemPoints')}
-                {...form.getInputProps('redeemPoints')}
-                disabled={data?.id}
+                key={form.key('redeemedPoints')}
+                {...form.getInputProps('redeemedPoints')}
                 hideControls
             />
             <NumberInput

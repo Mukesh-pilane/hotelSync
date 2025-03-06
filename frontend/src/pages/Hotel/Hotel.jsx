@@ -6,6 +6,8 @@ import HotelForm from './HotelForm'
 import { useDeleteHotelMutation, useGetHotelQuery } from '../../store/server/queries/hotelQuery'
 import { IconEdit, IconTrash } from '@tabler/icons-react'
 import { modals } from '@mantine/modals'
+import { Tooltip } from '@mantine/core';
+import CustomTooltip from '../../components/shared/CustomTooltip/CustomTooltip'
 
 
 
@@ -20,20 +22,27 @@ const Hotel = () => {
       {
         accessorKey: 'name', // Maps to the full name
         header: 'Name',
+        size: 50, //small column
       },
       {
         accessorKey: 'address', // Maps to the address
         header: 'Address',
         enableSorting: false,
+        size: 50, //small column
+        Cell: ({ cell }) => (
+          <CustomTooltip label={cell.getValue("address")} text={cell.getValue("address")}/>
+        ),
       },
       {
         accessorKey: 'baseTokenPoints', // Maps to the address
         header: 'Base Token Points',
+        size: 50, //small column
       },
       {
         accessorKey: 'redeemLimit', // Maps to the address
         header: 'redeemLimit',
         enableSorting: false,
+        size: 50, //small column
       },
     ],
     []

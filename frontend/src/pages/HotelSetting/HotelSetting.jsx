@@ -17,7 +17,7 @@ import { zodResolver } from 'mantine-form-zod-resolver';
 
 
 const hotelSchema = z.object({
-    name: z.number().min(10, { message: 'Mobile must have at least 10 characters' }),
+    name: z.string().min(10, { message: 'Mobile must have at least 10 characters' }),
     address: z.string()
         .min(5, { message: 'Address should have minimum 5 charcaters' })
         .max(200, { message: 'Address should have maximum 200 charcaters' }),
@@ -65,7 +65,6 @@ const HotelSetting = () => {
                 accessorKey: 'startAmount',
                 header: 'Start Amount',
                 size: 50, //small column
-
             },
             {
                 accessorKey: 'endAmount',

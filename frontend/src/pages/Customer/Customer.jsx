@@ -69,14 +69,17 @@ const Users = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        size:50
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        size:50
       },
       {
         accessorKey: 'mobile',
         header: 'Mobile',
+        size:80
       },
       {
         accessorKey: 'customer_token_point.points',
@@ -84,6 +87,7 @@ const Users = () => {
         Cell: ({ cell }) => (
           cell.getValue("customer_token_point.points") ?? "--"
         ),
+        size:80
       },
       {
         accessorKey: 'updatedAt',

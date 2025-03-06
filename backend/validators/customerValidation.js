@@ -22,13 +22,6 @@ exports.validateAddCustomer = [
     .isLength({ min: 10, max:10 })
     .withMessage("Mobile number must be exactly 10 digits"),
 
-  body("belongsToHotel")
-    .notEmpty()
-    .withMessage("Hotel Id is required")
-    .bail()
-    .isNumeric()
-    .withMessage("Hotel Id should be numeric"),
-  
   body("amount")
     .notEmpty()
     .withMessage("amount is required")
