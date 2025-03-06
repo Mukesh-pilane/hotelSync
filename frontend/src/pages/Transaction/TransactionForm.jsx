@@ -36,7 +36,6 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
     });
 
 
-    console.log('form?.values', form?.values)
     const handleSubmit = async (values) => {
         toggleLoading()
         if (data?.id) {
