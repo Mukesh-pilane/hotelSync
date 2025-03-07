@@ -8,16 +8,26 @@ import { useGetCustomerQuery } from '../../store/server/queries/customersQuery';
 import { useAuthStore } from '../../store/client/authStore';
 
 
-const transactionSchema = (redeemLimit, availablePoints) => z.object({
+const transactionSchema = (redeemLimit) => z.object({
     customerId: z.number().min(1, { message: 'Mobile must have at least 10 characters' }),
     amount: z.number().min(0, { message: 'Amount is required' }),
+    availablePoints: z.number().optional(),
     redeemedPoints: z.number().optional()
         .refine(val => val === undefined || val === 0 || val >= redeemLimit, {
             message: `Minimum redeem points are ${redeemLimit}`
         })
-        .refine(val => val === undefined  && val <= availablePoints, {
-            message: `Available points are ${availablePoints}`
-        })
+        .refine((val, ctx) => {
+                const availablePoints = ctx.parent.availablePoints;
+                if (val !== undefined && val > availablePoints) {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: `Available points are ${availablePoints}`,
+                        path: ['redeemedPoints']
+                    });
+                    return false;
+                }
+                return true;
+            })
 });
 const initialValues = {
     customerId: '',
@@ -36,7 +46,7 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: modifiedData,
-        validate: zodResolver(transactionSchema(userData?.hotel?.baseTokenPoints, data?.customer?.customer_token_point?.points || 0)),
+        validate: zodResolver(transactionSchema(userData?.hotel?.baseTokenPoints)),
     });
 
 
