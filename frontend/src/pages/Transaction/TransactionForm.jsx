@@ -15,9 +15,7 @@ const transactionSchema = (redeemLimit) => z.object({
         .refine(val => val === undefined || val === 0 || val >= redeemLimit, {
             message: `Minimum redeem points are ${redeemLimit}`
         })
-}).superRefine(({ redeemedPoints, availablePoints }, ctx) => {
-    console.log('availablePoints', availablePoints)
-    console.log('redeemedPoints', redeemedPoints)
+}).superRefine(({ redeemedPoints, availablePoints, amount }, ctx) => {
     // Check if `redeemedPoints` is defined and greater than `availablePoints`
     if (redeemedPoints !== undefined && availablePoints !== undefined && redeemedPoints > availablePoints) {
         ctx.addIssue({
@@ -25,9 +23,17 @@ const transactionSchema = (redeemLimit) => z.object({
             message: `Available points are ${availablePoints}`,
             path: ['redeemedPoints']
         });
-        return false;  // Prevent further validation
+        return false;
     }
-    return true;  // Validation passed
+    if (redeemedPoints !== undefined && amount !== undefined && redeemedPoints > amount) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Redeem point should not be greater than amount",
+            path: ['redeemedPoints']
+        });
+        return false;
+    }
+    return true;
 });
 
 const initialValues = {

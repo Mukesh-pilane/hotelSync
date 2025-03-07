@@ -38,7 +38,7 @@ const Transaction = () => {
                 header: 'Amount',
             },
             {
-                accessorKey: 'redeemPoints',
+                accessorKey: 'redeemed_points',
                 header: 'Redeem Points',
             },
             {
