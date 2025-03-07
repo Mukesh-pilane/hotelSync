@@ -7,28 +7,29 @@ import { zodResolver } from 'mantine-form-zod-resolver';
 import { useGetCustomerQuery } from '../../store/server/queries/customersQuery';
 import { useAuthStore } from '../../store/client/authStore';
 
-
 const transactionSchema = (redeemLimit) => z.object({
-    customerId: z.number().min(1, { message: 'Mobile must have at least 10 characters' }),
+    customerId: z.number().min(1, { message: 'Customer ID must be a positive number' }),  // Updated message
     amount: z.number().min(0, { message: 'Amount is required' }),
     availablePoints: z.number().optional(),
     redeemedPoints: z.number().optional()
         .refine(val => val === undefined || val === 0 || val >= redeemLimit, {
             message: `Minimum redeem points are ${redeemLimit}`
         })
-        .refine((val, ctx) => {
-                const availablePoints = ctx.parent.availablePoints;
-                if (val !== undefined && val > availablePoints) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: `Available points are ${availablePoints}`,
-                        path: ['redeemedPoints']
-                    });
-                    return false;
-                }
-                return true;
-            })
+}).superRefine(({ redeemedPoints, availablePoints }, ctx) => {
+    console.log('availablePoints', availablePoints)
+    console.log('redeemedPoints', redeemedPoints)
+    // Check if `redeemedPoints` is defined and greater than `availablePoints`
+    if (redeemedPoints !== undefined && availablePoints !== undefined && redeemedPoints > availablePoints) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Available points are ${availablePoints}`,
+            path: ['redeemedPoints']
+        });
+        return false;  // Prevent further validation
+    }
+    return true;  // Validation passed
 });
+
 const initialValues = {
     customerId: '',
     redeemedPoints: 0,
