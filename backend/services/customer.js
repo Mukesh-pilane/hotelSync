@@ -239,12 +239,16 @@ exports.retriveTransactions = async (query) => {
             {
                 model: db.customer,
                 attributes: ["id", "firstName", "lastName", "mobile", "updatedAt"],
+                include:{
+                    model: db.customer_token_points,
+                    attributes: ["points"],
+                }
             }
         ],
         where: whereClause,
         limit,
         offset: skip,
-        attributes: ["id", "amount"],
+        attributes: ["id", "amount", "redeemed_points"],
         order: [['updatedAt', 'desc']],
     });
     return { 

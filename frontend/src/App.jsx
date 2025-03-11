@@ -53,6 +53,10 @@ function App() {
       }
     }),
     {
+      path: "/",
+      element: <Navigate to="/transaction" />
+    },
+    {
       path: "/unauthorized",
       element: <div>no access !!</div>,
     },

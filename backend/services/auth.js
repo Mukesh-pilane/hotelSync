@@ -38,8 +38,9 @@ exports.logInService = async (body) => {
         id: getUserInfo.id,
         mobile: mobile,
         role : getUserInfo.role?.name,
-        hotel: getUserInfo.hotel?.name
+        hotel: getUserInfo.hotel?.id
     }
+
     const accessToken = generateToken(data);
     const ifTokenExist = await db.user_token.findOne({ where: { user_id: getUserInfo.id }});
     if(ifTokenExist){

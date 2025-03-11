@@ -16,7 +16,6 @@ const Table = (props) => {
     },
     positionActionsColumn: "last",
     initialState: { density: 'xs' },
-    paginationDisplayMode: 'pages',
     enableStickyHeader: true,
     enableGlobalFilter: false, // do not scan this column during global filtering
     enableColumnFilters: false, // do not scan this column during column filtering

@@ -7,17 +7,38 @@ import { zodResolver } from 'mantine-form-zod-resolver';
 import { useGetCustomerQuery } from '../../store/server/queries/customersQuery';
 import { useAuthStore } from '../../store/client/authStore';
 
-
-const transactionSchema = (basePoints) => z.object({
-    customerId: z.number().min(1, { message: 'Mobile must have at least 10 characters' }),
+const transactionSchema = (redeemLimit) => z.object({
+    customerId: z.number().min(1, { message: 'Customer ID must be a positive number' }),  // Updated message
     amount: z.number().min(0, { message: 'Amount is required' }),
-    redeemPoints: z.number().optional().refine(val => val === undefined || val >= 0, {
-        message: `Minimum redeem points are ${basePoints}`,
-      }),
+    availablePoints: z.number().optional(),
+    redeemedPoints: z.number().optional()
+        .refine(val => val === undefined || val === 0 || val >= redeemLimit, {
+            message: `Minimum redeem points are ${redeemLimit}`
+        })
+}).superRefine(({ redeemedPoints, availablePoints, amount }, ctx) => {
+    // Check if `redeemedPoints` is defined and greater than `availablePoints`
+    if (redeemedPoints !== undefined && availablePoints !== undefined && redeemedPoints > availablePoints) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Available points are ${availablePoints}`,
+            path: ['redeemedPoints']
+        });
+        return false;
+    }
+    if (redeemedPoints !== undefined && amount !== undefined && redeemedPoints > amount) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Redeem point should not be greater than amount",
+            path: ['redeemedPoints']
+        });
+        return false;
+    }
+    return true;
 });
+
 const initialValues = {
     customerId: '',
-    redeemPoints: 0,
+    redeemedPoints: 0,
     availablePoints: "",
     amount: ''
 };
@@ -28,7 +49,7 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
     const { mutate: updateTransactionMutation } = useUpdateTransactionMutation();
     const { userData } = useAuthStore();
 
-    const modifiedData = data?.id ? { ...data, customerId: Number(data?.customer?.id) } : initialValues;
+    const modifiedData = data?.id ? { ...data, customerId: Number(data?.customer?.id), availablePoints: data?.customer?.customer_token_point?.points } : initialValues;
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: modifiedData,
@@ -36,11 +57,10 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
     });
 
 
-    console.log('form?.values', form?.values)
     const handleSubmit = async (values) => {
         toggleLoading()
         if (data?.id) {
-            updateTransactionMutation({ id: data.id, data: { amount: values.amount, customerId: data?.customer?.customerId } }, { onSuccess: close, onError: toggleLoading });
+            updateTransactionMutation({ id: data.id, data: { amount: values.amount, customerId: data?.customer?.customerId, redeemedPoints: values?.redeemedPoints } }, { onSuccess: close, onError: toggleLoading });
         } else {
             addTransactionMutation(values, { onSuccess: close, onError: toggleLoading });
         }
@@ -79,9 +99,8 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
                 withAsterisk
                 label="Redeem Points"
                 placeholder="1000"
-                key={form.key('redeemPoints')}
-                {...form.getInputProps('redeemPoints')}
-                disabled={data?.id}
+                key={form.key('redeemedPoints')}
+                {...form.getInputProps('redeemedPoints')}
                 hideControls
             />
             <NumberInput

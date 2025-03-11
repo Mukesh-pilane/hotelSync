@@ -1,11 +1,10 @@
 import React from 'react'
 import z from 'zod';
 import { useForm } from '@mantine/form';
-import { Button, Group, NumberInput, Select, Text } from '@mantine/core';
+import { Button, Group, NumberInput } from '@mantine/core';
 import { zodResolver } from 'mantine-form-zod-resolver';
 // import { RangeSlider } from '@mantine/core';
 import { useAddTokenRangeMutation, useGetTokenRangeQuery, useUpdateTokenRangeMutation } from '../../store/server/queries/tokenRangeQuery';
-import { useGetHotelQuery } from '../../store/server/queries/hotelQuery';
 import { useAuthStore } from '../../store/client/authStore';
 
 
@@ -48,7 +47,6 @@ const TokenRangeForm = ({ data, close, toggleLoading }) => {
     const { userData } = useAuthStore((state) => state);
     const { data: tokenRangeData } = useGetTokenRangeQuery({ hotelId: userData?.hotel?.id, limit: -1, page: 1 });
 
-    const { data: hotleOptions } = useGetHotelQuery({})
 
     const { mutate: addTokenRangeMutation } = useAddTokenRangeMutation();
     const { mutate: updateTokenRangeMutation } = useUpdateTokenRangeMutation();
@@ -74,18 +72,6 @@ const TokenRangeForm = ({ data, close, toggleLoading }) => {
         <form
             onSubmit={form.onSubmit(handleSubmit)}
             style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <Select
-                withAsterisk
-                label="Hotel"
-                placeholder="Hotel Name"
-                searchable
-                nothingFound="No options"
-                key={form.key('hotelId')}
-                {...form.getInputProps('hotelId')}
-                hideControls
-                disabled
-                data={hotleOptions ? hotleOptions?.data?.map((hotel) => ({ value: hotel.id, label: hotel?.name })) : []}
-            />
             <NumberInput
                 withAsterisk
                 label="Token Points"
@@ -93,6 +79,7 @@ const TokenRangeForm = ({ data, close, toggleLoading }) => {
                 key={form.key('tokenPoints')}
                 {...form.getInputProps('tokenPoints')}
                 hideControls
+                min={0}
             />
             <NumberInput
                 withAsterisk
@@ -101,6 +88,7 @@ const TokenRangeForm = ({ data, close, toggleLoading }) => {
                 key={form.key('startAmount')}
                 {...form.getInputProps('startAmount')}
                 hideControls
+                min={0}
             />
             <NumberInput
                 withAsterisk
@@ -110,9 +98,9 @@ const TokenRangeForm = ({ data, close, toggleLoading }) => {
                 {...form.getInputProps('endAmount')}
                 hideControls
             />
-            
+
             <Group justify="flex-end" mt="md">
-                <Button type="submit">{data?.id ? "Update" : "Submit" }</Button>
+                <Button type="submit">{data?.id ? "Update" : "Submit"}</Button>
             </Group>
         </form>
     )

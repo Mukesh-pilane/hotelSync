@@ -24,18 +24,27 @@ const Transaction = () => {
             {
                 accessorKey: 'customer.firstName',
                 header: 'First Name',
+                size: 50
             },
             {
                 accessorKey: 'customer.lastName',
                 header: 'Last Name',
+                size: 50
             },
             {
                 accessorKey: 'customer.mobile',
                 header: 'Mobile',
+                size: 80
             },
             {
                 accessorKey: 'amount',
                 header: 'Amount',
+                size: 50
+            },
+            {
+                accessorKey: 'redeemed_points',
+                header: 'Redeem Points',
+                size: 50
             },
             {
                 accessorKey: 'customer.updatedAt',
@@ -52,7 +61,7 @@ const Transaction = () => {
 
     const customModal = (data = {}) =>
         modals.openContextModal({
-            title: data?.id ? 'Edit Transaction' : 'Add Transaction',
+            title: <Text fw={600}>{data?.id ? 'Edit Transaction' : 'Add Transaction'}</Text>,
             modal: 'custom',
             centered: true,
             closeOnClickOutside: false,

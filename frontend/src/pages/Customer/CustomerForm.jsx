@@ -66,13 +66,13 @@ const CustomerForm = ({ data, close, toggleLoading, handleNavigate }) => {
     const handleSubmit = async (values) => {
         toggleLoading(true)
         if (data?.id) {
-            updateCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close })
+            updateCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close, onError: toggleLoading  })
         } else {
             if (customerId) {
-                addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close });
+                addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close, onError: toggleLoading  });
                 handleNavigate()
             } else {
-                addCustomerMutation({ ...values, mobile: `${values.mobile}`, belongsToHotel: 1 }, { onSuccess: close });
+                addCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close, onError: toggleLoading  });
             }
         }
     };

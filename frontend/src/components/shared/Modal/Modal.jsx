@@ -1,8 +1,8 @@
-import { Modal } from '@mantine/core';
+import { Modal, Text } from '@mantine/core';
 
 function CustomModal({ children,title, opened, close }) {
     return (
-        <Modal opened={opened} onClose={close} title={title} centered closeOnClickOutside={false}>
+        <Modal opened={opened} onClose={close} title={<Text fw={600}>{title}bs</Text>} centered closeOnClickOutside={false}>
             {children}
         </Modal>
     );
