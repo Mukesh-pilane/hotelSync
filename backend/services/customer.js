@@ -41,6 +41,7 @@ exports.createCustomer = async (body) => {
         where: {
             startAmount: { [Op.lte]: amount },
             endAmount: { [Op.gte]: amount },
+            hotelId: belongsToHotel,
             deletedAt: null
         },
         order: [['startAmount', 'desc']]
@@ -48,7 +49,8 @@ exports.createCustomer = async (body) => {
     if(!tokenRange){  // if amount if greater than every range take maximim range
         tokenRange = await db.token_range.findOne({
             where: {
-                deletedAt: null
+                deletedAt: null,
+                hotelId: belongsToHotel,
             },
             order: [['startAmount', 'desc']],
             limit: 1
@@ -122,7 +124,7 @@ exports.retriveCustomers = async (query) => {
         attributes: ['id', 'firstName', "lastName", "mobile", "documents", "updatedAt"],
         offset: skip,
         limit,
-        sort: { updatedAt: -1 }
+        order: [["updatedAt", "desc"]]
     });
     return { 
         statusCode: 200, 
