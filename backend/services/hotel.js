@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const db = require('../models');
 
 const { UnauthorizedError, BadRequestError, ValidationError, DataNotFoundError } = require('../utils/customError');
@@ -13,12 +14,28 @@ exports.addHotel = async (body) => {
     };
 }
 
-exports.retriveHotels = async () => {
+exports.retriveHotels = async (query) => {
+    let page = Number(query.page) || 1;
+    let limit = Number(query.limit) || 10;
+    const skip =  (page - 1) * limit;
+    const search = query.search || "";
+
+    const whereClause = { 
+            ...(search && {
+              [Op.or] : [
+                { name : { [Op.iLike]: `%${search}%` } },
+                { address : { [Op.iLike]: `%${search}%` } },
+              ]
+            }),
+            deletedAt: null,
+        }
+
     const hotelData = await db.hotel.findAll({
-        where: {
-            deleted_at: null
-        },
-        attributes: ["name", "address", "id", "baseTokenPoints", "redeemLimit"]
+        where: whereClause,
+        limit,
+        offset: skip,
+        attributes: ["name", "address", "id", "baseTokenPoints", "redeemLimit"],
+        order: [["updatedAt", "desc"]]
     });
 
     return {  

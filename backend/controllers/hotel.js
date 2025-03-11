@@ -7,7 +7,11 @@ exports.insertHotel = async (req, res) => {
 }
 
 exports.fetchHotels = async (req, res) => {
-    const result = await retriveHotels();
+    const query = {};
+    query.page = req.query.page;
+    query.limit = req.query.limit;
+    query.search = req.query.search;
+    const result = await retriveHotels(query);
     res.status(200).send(result);
 }
 
