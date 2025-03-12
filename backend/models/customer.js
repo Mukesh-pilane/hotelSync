@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         belongsToHotel : {
             type: DataTypes.INTEGER,
-            filed: 'hotel_id',
+            filed: 'belongs_to_hotel',
             allowNull: false,
         },
         createdBy: {
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         underscored: true,
     });
     customer.associate = (models) => {
-        customer.belongsTo(models.hotel, { foreignKey: 'hotel_id'} );
+        customer.belongsTo(models.hotel, { foreignKey: 'belongs_to_hotel'} );
         customer.hasOne(models.customer_token_points, { foreignKey: 'customer_id' });
         customer.belongsTo(models.user, { foreignKey: 'created_by'})
     }

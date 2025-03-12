@@ -1,5 +1,6 @@
 const { verifyToken } = require('../utils/jwt');
 const db = require('../models');
+const { Model } = require('sequelize');
 
 module.exports = async (req, res, next) => {
     const checkToken = req.headers.authorization;
@@ -12,12 +13,23 @@ module.exports = async (req, res, next) => {
         return res.status(401).send({ message: 'Unauthorized' });
     }
     const decode = verifyToken(accessToken);
-    const userDetails = await db.user.findOne({ where: { mobile: decode.mobile}});
+    const userDetails = await db.user.findOne({ 
+        where: { 
+            mobile: decode.mobile,
+            deletedAt: null
+        },
+        include: [
+            { 
+                model: db.role
+            }
+        ]
+    });
     if (userDetails) {
         req.userData = { 
             id: userDetails.id, 
             role: userDetails.role_id,
-            hotel: userDetails.hotel_id
+            hotel: userDetails.hotel_id,
+            roleName: userDetails.role?.name
         };
         next();
     } 

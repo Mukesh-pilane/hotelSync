@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         hotel.hasOne(models.user, { foreignkey : "hotel_id"} );
         hotel.hasOne(models.customer_token_points, { foreignkey: 'hotel_id' });
         hotel.hasOne(models.token_range, { foreignkey: 'hotel_id' });
+        hotel.hasOne(models.customer, { foreignkey : "belongs_to_hotel" });
     }
     return hotel;
 }
