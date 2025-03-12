@@ -4,41 +4,41 @@ services:
   # Backend service (Node.js with Express)
   backend:
     build:
-      context: ./backend  # Set the correct path to the 'backend' directory
-      dockerfile: Dockerfile  # Use the Dockerfile in the backend directory
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: hotel_sync_backend
     ports:
-      - "5000:5000"  # Expose backend on port 5000
+      - "5000:5000"
     environment:
-      - DATABASE_URL=postgres://user:password@db:5432/hotelsync_db
+      - DATABASE_URL=postgres://postgres:1234@db:5432/hotelsync_db  # Match this with config.js settings
     depends_on:
-      - db  # Ensure backend starts after the database
+      - db
     volumes:
-      - ./backend:/usr/src/app  # Mount backend source code for live development
+      - ./backend:/usr/src/app
 
   # Frontend service (React with Vite)
   frontend:
     build:
-      context: ./frontend  # Set the correct path to the 'frontend' directory
-      dockerfile: Dockerfile  # Use the Dockerfile in the frontend directory
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: hotel_sync_frontend
     ports:
-      - "3000:3000"  # Expose frontend on port 3000
+      - "3000:3000"
     depends_on:
-      - backend  # Ensure frontend waits for the backend to start
+      - backend
 
   # PostgreSQL service
   db:
     image: postgres:13
     container_name: hotel_sync_db
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=hotelsync_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=hotelSync-local  # Match this with your database name in config.js
     volumes:
-      - db_data:/var/lib/postgresql/data  # Persist PostgreSQL data across container restarts
+      - db_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"  # Expose PostgreSQL to the host machine
+      - "5432:5432"
 
 volumes:
   db_data:
