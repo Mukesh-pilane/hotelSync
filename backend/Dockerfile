@@ -1,19 +1,19 @@
 # Use official Node.js image as base image
 FROM node:14
 
-# Set the working directory inside the container to /usr/src/app
+# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to install dependencies
-COPY package*.json ./
+# Copy package.json and package-lock.json files from the backend directory to the working directory inside the container
+COPY backend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy all the application files to the working directory
-COPY . .
+# Copy all backend application files to the working directory
+COPY backend ./
 
-# Expose the port that the backend will run on
+# Expose the port the backend will run on
 EXPOSE 3000
 
 # Run the application
