@@ -1,11 +1,10 @@
 version: '3.8'
 
 services:
-  # Backend service (Node.js with Express)
   backend:
     build:
-      context: ./  # Build from the root directory
-      dockerfile: backend/Dockerfile  # Specify the backend Dockerfile
+      context: .  # Ensure the context is the root of the project (not just ./backend)
+      dockerfile: backend/Dockerfile  # Path to the Dockerfile from the root
     container_name: hotel_sync_backend
     ports:
       - "5000:5000"
@@ -14,32 +13,4 @@ services:
     depends_on:
       - db
     volumes:
-      - ./backend:/usr/src/app
-
-  # Frontend service (React with Vite)
-  frontend:
-    build:
-      context: ./  # Build from the root directory
-      dockerfile: frontend/Dockerfile
-    container_name: hotel_sync_frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-
-  # PostgreSQL service
-  db:
-    image: postgres:13
-    container_name: hotel_sync_db
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=hotelsync_db
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-volumes:
-  db_data:
-    driver: local
+      - ./backend:/usr/src/app  # Moun
