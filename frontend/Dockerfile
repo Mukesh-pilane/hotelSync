@@ -1,29 +1,24 @@
-# Use official Node.js image as base image for building the app
+# Stage 1: Build stage
 FROM node:14 AS build
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to install dependencies
+# Copy package files and install dependencies
 COPY frontend/package*.json ./
-
-# Install frontend dependencies
 RUN npm install
 
-# Copy the source files for the frontend
+# Copy frontend source code
 COPY . .
 
 # Build the frontend application
-RUN npm run build
+RUN npm run build   # Make sure this command generates the 'dist' folder
 
-# Use Nginx to serve the frontend
+# Stage 2: Nginx stage
 FROM nginx:alpine
 
-# Copy the built frontend from the build image to Nginx
+# Copy the build output from the build stage to Nginx HTML folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 80 for the frontend
+# Expose the port
 EXPOSE 80
-
-# Start Nginx to serve the frontend
-CMD ["nginx", "-g", "daemon off;"]
