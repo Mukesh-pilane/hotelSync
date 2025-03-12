@@ -11,7 +11,7 @@ COPY backend/package*.json ./
 RUN npm install
 
 # Copy the rest of the backend files
-COPY backend /usr/src/app
+COPY ./backend /usr/src/app
 
 # Expose the backend application port (adjust as necessary, e.g., 5000)
 EXPOSE 5000
