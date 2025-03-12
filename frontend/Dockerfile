@@ -5,7 +5,7 @@ FROM node:14 AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json to install dependencies
-COPY package*.json ./
+COPY frontend/package*.json ./
 
 # Install frontend dependencies
 RUN npm install
