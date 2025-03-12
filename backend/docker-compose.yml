@@ -5,14 +5,14 @@ services:
   backend:
     build:
       context: .  # Build from the current directory
-      dockerfile: ./backend/Dockerfile  # Specify the path to the backend Dockerfile
+      dockerfile: backend/Dockerfile
     container_name: hotel_sync_backend
     ports:
-      - "5000:5000"  # Expose backend on port 5000
+      - "5000:5000"  # Expose backend on port 5000 (change if necessary)
     environment:
       - DATABASE_URL=postgres://user:password@db:5432/hotelsync_db
     depends_on:
-      - db  # Ensure backend starts after the database
+      - db  # Ensure the backend starts after the database
     volumes:
       - ./backend:/usr/src/app  # Mount backend source code for live development
 
@@ -20,12 +20,12 @@ services:
   frontend:
     build:
       context: .  # Build from the current directory
-      dockerfile: ./frontend/Dockerfile  # Specify the path to the frontend Dockerfile
+      dockerfile: frontend/Dockerfile
     container_name: hotel_sync_frontend
     ports:
       - "3000:3000"  # Expose frontend on port 3000
     depends_on:
-      - backend  # Ensure frontend waits for the backend to start
+      - backend  # Ensure the frontend waits for the backend to start
 
   # PostgreSQL service
   db:
