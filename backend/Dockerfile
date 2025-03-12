@@ -11,7 +11,7 @@ COPY backend/package*.json ./
 RUN npm install
 
 # Copy the entire backend app code to the container (use the correct path)
-COPY ./backend/
+COPY ./backend/ ./  # This copies files from the context (./backend) to the container's working directory
 
 # Expose the backend port
 EXPOSE 3000
