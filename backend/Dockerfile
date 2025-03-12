@@ -5,13 +5,13 @@ FROM node:14 AS build
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json for dependencies
-COPY backend/package*.json ./
+COPY package*.json ./
 
 # Install dependencies for the backend
 RUN npm install
 
 # Copy the entire backend app code to the container
-COPY backend/ ./
+COPY ./backend/ ./   # Use the correct relative path here
 
 # Expose the backend port
 EXPOSE 3000
