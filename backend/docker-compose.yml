@@ -4,28 +4,28 @@ services:
   # Backend service (Node.js with Express)
   backend:
     build:
-      context: ./  # Build from the root directory
-      dockerfile: backend/Dockerfile  # Specify the backend Dockerfile
+      context: .  # Build from the current directory
+      dockerfile: ./backend/Dockerfile  # Specify the path to the backend Dockerfile
     container_name: hotel_sync_backend
     ports:
-      - "5000:3000"  # Expose backend on port 5000
+      - "5000:5000"  # Expose backend on port 5000
     environment:
       - DATABASE_URL=postgres://user:password@db:5432/hotelsync_db
     depends_on:
-      - db
+      - db  # Ensure backend starts after the database
     volumes:
-      - ./backend:/usr/src/app
+      - ./backend:/usr/src/app  # Mount backend source code for live development
 
   # Frontend service (React with Vite)
   frontend:
     build:
-      context: ./  # Build from the root directory
-      dockerfile: frontend/Dockerfile  # Specify the frontend Dockerfile
+      context: .  # Build from the current directory
+      dockerfile: ./frontend/Dockerfile  # Specify the path to the frontend Dockerfile
     container_name: hotel_sync_frontend
     ports:
       - "3000:3000"  # Expose frontend on port 3000
     depends_on:
-      - backend
+      - backend  # Ensure frontend waits for the backend to start
 
   # PostgreSQL service
   db:
@@ -36,9 +36,9 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=hotelsync_db
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data  # Persist PostgreSQL data across container restarts
     ports:
-      - "5432:5432"  # Expose PostgreSQL on port 5432
+      - "5432:5432"  # Expose PostgreSQL to the host machine
 
 volumes:
   db_data:
