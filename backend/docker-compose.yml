@@ -3,8 +3,8 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./  # Make sure the context points to the root folder
-      dockerfile: backend/Dockerfile  # Ensure the correct Dockerfile is used
+      context: ./  # This sets the build context to the root directory of the project
+      dockerfile: backend/Dockerfile  # Specify the correct Dockerfile
     container_name: hotel_sync_backend
     ports:
       - "5000:5000"
@@ -17,7 +17,7 @@ services:
 
   frontend:
     build:
-      context: ./
+      context: ./  # Correct context for frontend
       dockerfile: frontend/Dockerfile
     container_name: hotel_sync_frontend
     ports:
