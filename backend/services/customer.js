@@ -111,20 +111,22 @@ exports.retriveCustomers = async (query) => {
         }),
         ...(roleName !== "super-admin" ? { belongsToHotel: hotelId } : {} ), // by pass super admin and find all hotels
         deletedAt: null,
-    }
+    };
 
-    console.log(whereClause, roleName)
+    const includeModels = [
+        {
+            model: db.customer_token_points,
+            attributes: ['points']
+        }
+    ];
+    if(roleName !== "admin"){
+        includeModels.push( { model: db.hotel } );
+    }
     
 
     const customerData = await db.customer.findAndCountAll({
         where: whereClause,
-        include: [
-            {
-                model: db.customer_token_points,
-                attributes: ['points']
-            },
-            ( roleName !== "super-admin" ? { model: db.hotel } : {} )
-        ],
+        include: includeModels,
         attributes: ['id', 'firstName', "lastName", "mobile", "documents", "updatedAt"],
         offset: skip,
         limit,

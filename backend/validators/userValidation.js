@@ -1,20 +1,24 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 const passwordRegrex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 exports.validateAddUser = [
   body("firstName")
+    .notEmpty()
+    .withMessage("First Name is required")
     .isString()
-    .withMessage("firstName should be a string")
+    .withMessage("First Name should be a string")
     .isLength({ min: 3, max: 50 })
-    .withMessage("firstName should be 3 to 50 characters long"),
+    .withMessage("First Name should be 3 to 50 characters long"),
 
   body("lastName")
+    .notEmpty()
+    .withMessage("Last Name is required")
     .isString()
-    .withMessage("lastName should be a string")
+    .withMessage("Last Name should be a string")
     .isLength({ min: 3, max: 50 })
-    .withMessage("lastName should be 3 to 50 characters long"),
+    .withMessage("Last Name should be 3 to 50 characters long"),
 
   body("mobile")
     .notEmpty()
@@ -74,3 +78,37 @@ exports.validateUpdatePassword = [
     .isNumeric()
     .withMessage("OTP should be the number"),
 ];
+
+exports.validateUpdateUser = [
+  param('id')
+    .notEmpty()
+    .withMessage("id is required.")
+    .isNumeric()
+    .withMessage("id should be the number"),
+
+  body("firstName")
+    .isString()
+    .withMessage("First Name should be a string")
+    .isLength({ min: 3, max: 50 })
+    .withMessage("First Name should be 3 to 50 characters long"),
+
+  body("lastName")
+    .isString()
+    .withMessage("Last Name should be a string")
+    .isLength({ min: 3, max: 50 })
+    .withMessage("Last Name should be 3 to 50 characters long"),
+
+  body("mobile")
+    .isString()
+    .withMessage('Mobile number must be a string')
+    .isLength({ min: 10, max:10 })
+    .withMessage("Mobile number must be exactly 10 digits"),
+
+  body("roleId")
+    .isNumeric()
+    .withMessage("roleId should be numeric"),
+
+  body("hotelId")
+    .isNumeric()
+    .withMessage("roleId should be numeric"),
+]
