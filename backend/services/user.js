@@ -10,7 +10,7 @@ exports.createUser = async (body) => {
     if(userExist){
         throw new BadRequestError(`User with phone number ${body.mobile} altready exist`)
     }
-    let res = await db.role.findAll();
+
     const roleExist = await db.role.findOne({
         where: {
             id: body.roleId
@@ -29,11 +29,25 @@ exports.createUser = async (body) => {
     }
 }
 
-exports.fetchAllUsers = async () => {
-    const fetchUsers = await db.user.findAll({
-        where: {
-            deletedAt: null
-        },
+exports.fetchAllUsers = async (query) => {
+    let page = Number(query.page) || 1;
+    let limit = Number(query.limit) || 10;
+    const skip =  (page - 1) * limit;
+    const search = query.search || "";
+
+    const whereClause = { 
+        ...(search && {
+            [Op.or] : [
+            { firstName : { [Op.like]: `%${search}%` } },
+            { lastName : { [Op.like]: `%${search}%` } },
+            { mobile: { [Op.like]: `%${search}%` } }
+            ]
+        }),
+        deletedAt: null,
+    }
+
+    const fetchUsers = await db.user.findAndCountAll({
+        where: whereClause,
         include:[
             {
                 model: db.role,
@@ -44,14 +58,53 @@ exports.fetchAllUsers = async () => {
                 attributes: ['name']
             }
         ],
-        attributes: ["first_name", "last_name", "mobile"]
+        attributes: ["first_name", "last_name", "mobile"],
+        offset: skip,
+        limit,
+        order: [["updatedAt", "desc"]]
     });
-    if (!fetchUsers) {
-        throw new DataNotFoundError();
-    } 
+
     return {  
         statusCode: 200, 
         message: 'Users Fetched Successfully',
         data: fetchUsers
     };
+}
+
+exports.modifyUser = async (id, body) => {
+    const modifiedCustomer = await db.user.update(
+        body,
+        {
+            where: {
+                id: id,
+                deletedAt: null
+            }
+        }
+    );
+    if(!modifiedCustomer){
+        throw new BadRequestError("Error while modifying user");
+    }
+    return { 
+        statusCode: 200, 
+        message: 'User Updated Successfully' 
+    }
+}
+
+exports.deleteUser = async (id) => {
+    const modifiedUser = await db.user.update(
+        { deletedAt: Date.now() },
+        {
+            where: {
+                id: id,
+                deletedAt: null
+            }
+        }
+    );
+    if(!modifiedUser){
+        throw new BadRequestError("Error while deleting user");
+    }
+    return { 
+        statusCode: 200, 
+        message: 'User Deleted Successfully' 
+    }
 }

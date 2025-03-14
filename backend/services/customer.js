@@ -98,6 +98,7 @@ exports.retriveCustomers = async (query) => {
     let limit = Number(query.limit) || 10;
     const skip =  (page - 1) * limit;
     const search = query.search || "";
+    const roleName = query.roleName;
     const { hotelId } = query;
 
     const whereClause = { 
@@ -108,19 +109,24 @@ exports.retriveCustomers = async (query) => {
             { mobile: { [Op.like]: `%${search}%` } }
           ]
         }),
-        belongsToHotel: hotelId,
+        ...(roleName !== "super-admin" ? { belongsToHotel: hotelId } : {} ), // by pass super admin and find all hotels
         deletedAt: null,
+    };
+
+    const includeModels = [
+        {
+            model: db.customer_token_points,
+            attributes: ['points']
+        }
+    ];
+    if(roleName !== "admin"){
+        includeModels.push( { model: db.hotel } );
     }
     
 
     const customerData = await db.customer.findAndCountAll({
         where: whereClause,
-        include: [
-            {
-                model: db.customer_token_points,
-                attributes: ['points']
-            }
-        ],
+        include: includeModels,
         attributes: ['id', 'firstName', "lastName", "mobile", "documents", "updatedAt"],
         offset: skip,
         limit,

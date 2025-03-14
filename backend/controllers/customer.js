@@ -14,6 +14,7 @@ exports.fetchCustomer = async (req, res) => {
     query.page = req.query.page;
     query.limit = req.query.limit;
     query.search = req.query.search;
+    query.roleName = req.userData.roleName;
     const result = await retriveCustomers(query);
     res.status(200).send(result);
 }
