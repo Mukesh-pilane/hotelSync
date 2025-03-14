@@ -1,6 +1,5 @@
 const { verifyToken } = require('../utils/jwt');
 const db = require('../models');
-const { Model } = require('sequelize');
 
 module.exports = async (req, res, next) => {
     const checkToken = req.headers.authorization;
