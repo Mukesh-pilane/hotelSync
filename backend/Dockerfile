@@ -5,7 +5,7 @@ FROM node:14
 WORKDIR /app
 
 # Copy the package.json and package-lock.json files
-COPY backend/package*.json ./
+COPY package*.json ./
 
 # Install any needed packages
 RUN npm install
