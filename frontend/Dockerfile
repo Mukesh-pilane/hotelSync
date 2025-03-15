@@ -1,23 +1,21 @@
-# Use an official Node.js image as a parent image
-FROM node:14
+# Use official Node.js image as base
+FROM node:16-alpine
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /frontend
 
 # Install dependencies
-COPY frontend/package*.json ./
-
-# Install any needed packages
+COPY package*.json ./
 RUN npm install
 
-# Copy the frontend source files
-COPY frontend/ .
+# Copy all the source files to the container
+COPY . .
 
-# Build the frontend
+# Build the frontend project
 RUN npm run build
 
-# Expose the port for frontend
+# Expose the port your frontend will run on
 EXPOSE 3000
 
-# Run the frontend app (if using a production build)
-CMD ["npm", "start"]
+# Command to run the frontend app
+CMD ["npm", "run", "dev"]
