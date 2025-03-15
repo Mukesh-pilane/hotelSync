@@ -5,7 +5,7 @@ FROM node:16-alpine
 WORKDIR /frontend
 
 # Install dependencies
-COPY package*.json ./
+COPY frontend/package*.json ./
 RUN npm install
 
 # Copy all the source files to the container
