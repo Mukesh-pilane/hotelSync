@@ -1,24 +1,23 @@
-# Stage 1: Build the frontend
-FROM node:19 as build
+# Use an official Node.js image as a parent image
+FROM node:14
 
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Install dependencies
 COPY frontend/package*.json ./
+
+# Install any needed packages
 RUN npm install
 
-# Copy the source files and build the frontend
-COPY frontend/ ./
+# Copy the frontend source files
+COPY frontend/ .
+
+# Build the frontend
 RUN npm run build
 
-# Stage 2: Serve with Nginx
-FROM nginx:alpine
+# Expose the port for frontend
+EXPOSE 3000
 
-# Create the necessary directory structure if it doesn't exist
-RUN mkdir -p /usr/share/nginx/html
-
-# Copy the build output from the build stage to Nginx HTML folder
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expose the port
-EXPOSE 80
+# Run the frontend app (if using a production build)
+CMD ["npm", "start"]
