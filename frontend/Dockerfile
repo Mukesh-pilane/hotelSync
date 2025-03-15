@@ -3,20 +3,22 @@ FROM node:19 as build
 
 WORKDIR /app
 
+# Copy package files and install dependencies
 COPY frontend/package*.json ./
 RUN npm install
 
+# Copy the source files and build the frontend
 COPY frontend/ ./
 RUN npm run build
-
-# Add a line to check if the 'dist' directory exists
-RUN ls -l /app/dist  # This will list the contents of the dist folder
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 
+# Create the necessary directory structure if it doesn't exist
+RUN mkdir -p /usr/share/nginx/html
+
 # Copy the build output from the build stage to Nginx HTML folder
-COPY --from=build /app/dist /usr/share/nginx/html  # Make sure this path is correct
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Expose the port
 EXPOSE 80
