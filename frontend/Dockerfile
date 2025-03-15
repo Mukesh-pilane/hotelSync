@@ -1,27 +1,22 @@
-# Stage 1: Build stage
-FROM node:14 AS build
+# Stage 1: Build the frontend
+FROM node:19 as build
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-# Ensure these files are available relative to the context
 COPY frontend/package*.json ./
 RUN npm install
 
-# Copy frontend source code
-COPY frontend/ .
-
-# Build the frontend application
-# Make sure this command generates the 'dist' folder
+COPY frontend/ ./
 RUN npm run build
 
-# Stage 2: Nginx stage
+# Add a line to check if the 'dist' directory exists
+RUN ls -l /app/dist  # This will list the contents of the dist folder
+
+# Stage 2: Serve with Nginx
 FROM nginx:alpine
 
 # Copy the build output from the build stage to Nginx HTML folder
-# Ensure the path matches the build output directory in the first stage
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html  # Make sure this path is correct
 
 # Expose the port
 EXPOSE 80
