@@ -1,14 +1,11 @@
-version: '3.8'
-
+version: "3.8"
 services:
-  # Backend service (Node.js with Express)
   backend:
     build:
-      context: ./backend  # Build context should point to the backend directory at the root level
-      dockerfile: Dockerfile
-    container_name: hotel_sync_backend
+      context: ./backend  # Ensure this points to the backend directory
     ports:
-      - "5000:5000"
+      - "3000:3000"
+
     environment:
       - DATABASE_URL=postgres://postgres:1234@db:5432/hotelsync_db  # Ensure this matches your config
     depends_on:
