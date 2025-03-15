@@ -7,13 +7,8 @@ WORKDIR /frontend
 # Copy package.json and package-lock.json first
 COPY frontend/package*.json ./
 
-
-
 # Copy all the source files to the container
 COPY . .
-
-# Build the frontend project
-RUN npm run build --verbose
 
 # Expose the port your frontend will run on
 EXPOSE 3000
