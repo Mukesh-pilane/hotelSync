@@ -7,8 +7,7 @@ WORKDIR /frontend
 # Copy package.json and package-lock.json first
 COPY frontend/package*.json ./
 
-# Install dependencies
-RUN npm install --verbose
+
 
 # Copy all the source files to the container
 COPY . .
