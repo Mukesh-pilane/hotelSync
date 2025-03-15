@@ -4,9 +4,11 @@ FROM node:16-alpine
 # Set the working directory in the container
 WORKDIR /frontend
 
-# Install dependencies
+# Copy package.json and package-lock.json for npm install
 COPY frontend/package*.json ./
-RUN npm install
+
+# Install dependencies
+RUN npm install --verbose
 
 # Copy all the source files to the container
 COPY . .
