@@ -14,18 +14,21 @@ services:
     depends_on:
       - db
     volumes:
-      - ./backend:/usr/src/app  # This will sync files between host and container
+      - ./backend:/usr/src/app  # Sync files between host and container
 
   # Frontend service (React with Vite)
   frontend:
     build:
       context: ./frontend  # Build context should point to the frontend directory at the root level
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile  # Make sure this is the correct path
     container_name: hotel_sync_frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
+    volumes:
+      - ./frontend:/frontend  # Mount the frontend directory to /frontend in the container
+    working_dir: /frontend  # Set the working directory for the frontend container
 
   # PostgreSQL service
   db:
@@ -34,7 +37,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=hotelSync-local  # Make sure this matches your database name in config.js
+      - POSTGRES_DB=hotelSync-local  # Ensure this matches your database name in config.js
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
