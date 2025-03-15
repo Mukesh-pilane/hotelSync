@@ -14,7 +14,7 @@ RUN npm install --verbose
 COPY . .
 
 # Build the frontend project
-RUN npm run build
+RUN npm run build --verbose
 
 # Expose the port your frontend will run on
 EXPOSE 3000
