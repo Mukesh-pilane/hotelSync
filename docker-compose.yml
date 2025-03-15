@@ -4,22 +4,22 @@ services:
   # Backend service (Node.js with Express)
   backend:
     build:
-      context: ./backend
+      context: ./backend  # Build context should point to the backend directory at the root level
       dockerfile: Dockerfile
     container_name: hotel_sync_backend
     ports:
       - "5000:5000"
     environment:
-      - DATABASE_URL=postgres://postgres:1234@db:5432/hotelsync_db  # Match this with config.js settings
+      - DATABASE_URL=postgres://postgres:1234@db:5432/hotelsync_db  # Ensure this matches your config
     depends_on:
       - db
     volumes:
-      - ./backend:/usr/src/app
+      - ./backend:/usr/src/app  # This will sync files between host and container
 
   # Frontend service (React with Vite)
   frontend:
     build:
-      context: ./frontend
+      context: ./frontend  # Build context should point to the frontend directory at the root level
       dockerfile: Dockerfile
     container_name: hotel_sync_frontend
     ports:
@@ -34,7 +34,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=hotelSync-local  # Match this with your database name in config.js
+      - POSTGRES_DB=hotelSync-local  # Make sure this matches your database name in config.js
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
