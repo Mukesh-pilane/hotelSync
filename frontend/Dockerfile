@@ -4,7 +4,7 @@ FROM node:16-alpine
 # Set the working directory in the container
 WORKDIR /frontend
 
-# Copy package.json and package-lock.json for npm install
+# Copy package.json and package-lock.json first
 COPY frontend/package*.json ./
 
 # Install dependencies
@@ -19,5 +19,5 @@ RUN npm run build
 # Expose the port your frontend will run on
 EXPOSE 3000
 
-# Command to run the frontend app
+# Command to run the frontend app (for development)
 CMD ["npm", "run", "dev"]
