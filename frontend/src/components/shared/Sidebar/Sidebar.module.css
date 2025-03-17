@@ -12,17 +12,21 @@
 :global {
   .mantine-Drawer-inner {
     max-width: 50%;
+    z-index: 9999999;
     display: flex;
   }
-  .mantine-Drawer-content{
+
+  .mantine-Drawer-content {
     display: flex;
   }
-  .mantine-Drawer-body{
+
+  .mantine-Drawer-body {
     display: flex;
     width: 100%;
     flex-direction: column;
   }
-  .mantine-Drawer-header{
+
+  .mantine-Drawer-header {
     padding: 1rem !important;
   }
 }

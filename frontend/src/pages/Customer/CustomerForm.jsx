@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import { useForm } from '@mantine/form';
-import { Button, Group, NumberInput, TextInput } from '@mantine/core';
+import { Box, Button, Group, NumberInput, Text, TextInput } from '@mantine/core';
 import { useAddCustomerMutation, useUpdateCustomerMutation } from '../../store/server/queries/customersQuery';
 import { getCustomers } from '../../store/server/services/customersService';
 import { useTransactionLogMutation } from '../../store/server/queries/transactionQuery';
 import { z } from 'zod';
 import { zodResolver } from 'mantine-form-zod-resolver';
+import { modals } from '@mantine/modals';
+import TransactionForm from '../Transaction/TransactionForm';
+import { notifications } from '@mantine/notifications';
 
 const initialValues = {
     mobile: ""
@@ -51,7 +54,31 @@ const CustomerForm = ({ data, close, toggleLoading, handleNavigate }) => {
             try {
                 const res = await getCustomers({ search: val })
                 form.setFieldValue("mobile", val)
+                if(!res.data.data[0]?.id){
+                    return
+                }
                 setCustomerId(res.data.data[0]?.id)
+                modals.openContextModal({
+                    modal: 'message',
+                    centered: true,
+                    closeOnClickOutside: false,
+                    innerProps: {
+                        message: "Would you like to add transaction",
+                        handleOkCallback: () => {
+                            close()
+                            modals.openContextModal({
+                                title: <Text fw={600}>{'Add Transaction'}</Text>,
+                                modal: 'custom',
+                                centered: true,
+                                closeOnClickOutside: false,
+                                innerProps: {
+                                    body: TransactionForm,
+                                    data: { customerId: res.data.data[0]?.id,  availablePoints: res.data.data[0]?.customer_token_point?.points }
+                                }
+                            })
+                        }
+                    }
+                })
             } catch (error) {
                 console.error('error', error)
             }
@@ -66,13 +93,13 @@ const CustomerForm = ({ data, close, toggleLoading, handleNavigate }) => {
     const handleSubmit = async (values) => {
         toggleLoading(true)
         if (data?.id) {
-            updateCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close, onError: toggleLoading  })
+            updateCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close, onError: toggleLoading })
         } else {
             if (customerId) {
-                addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close, onError: toggleLoading  });
+                addTransactionMutation({ amount: values.amount, customerId }, { onSuccess: close, onError: toggleLoading });
                 handleNavigate()
             } else {
-                addCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close, onError: toggleLoading  });
+                addCustomerMutation({ ...values, mobile: `${values.mobile}` }, { onSuccess: close, onError: toggleLoading });
             }
         }
     };
@@ -140,7 +167,7 @@ const CustomerForm = ({ data, close, toggleLoading, handleNavigate }) => {
 
             }
             <Group justify="flex-end" mt="md">
-                <Button disabled={!form.isDirty()} type="submit" >{data?.id ? "Update" : "Submit" }</Button>
+                <Button disabled={!form.isDirty()} type="submit" >{data?.id ? "Update" : "Submit"}</Button>
             </Group>
         </form>
     )

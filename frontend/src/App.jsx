@@ -18,6 +18,7 @@ import { permissions } from "./utility/permission";
 import { useAuthStore } from "./store/client/authStore";
 import DeleteModal from "./components/shared/Modal/DeleteModal";
 import CustomModal from "./components/shared/Modal/CustomModal";
+import MessageModal from "./components/shared/Modal/MessageModal";
 
 
 
@@ -77,7 +78,7 @@ function App() {
             indigo: ['#c6c4fb', '#c6c4fb', '#e8e7fd', '#e8e7fd', '#2f28f0', '#2f28f0','#5e58f4'],
           }
         }}>
-        <ModalsProvider  modals={{ "delete": DeleteModal, "custom": CustomModal }} labels={{ confirm: 'Submit' }}>
+        <ModalsProvider  modals={{ "delete": DeleteModal, "custom": CustomModal, "message": MessageModal }} labels={{ confirm: 'Submit' }}>
           <Notifications position="top-right" zIndex={2077} />
           <RouterProvider router={router} />
         </ModalsProvider>

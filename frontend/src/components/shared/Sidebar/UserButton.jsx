@@ -16,8 +16,11 @@ export default function UserButton() {
           <IconUserHexagon stroke={2} />
         </ThemeIcon>
         <div style={{ flex: 1 }}>
-          <Text size="sm" fw={500}>
-            {userData?.mobile}
+        <Text size="sm" fw={500}>
+            {userData?.hotel?.name?.toUpperCase()}
+          </Text>
+          <Text c="dimmed" size="xs">
+          {userData?.mobile}
           </Text>
         </div>
         <Tooltip arrowOffset={10} arrowSize={4} label="Logout" withArrow position="right-start">

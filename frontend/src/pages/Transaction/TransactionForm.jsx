@@ -49,7 +49,18 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
     const { mutate: updateTransactionMutation } = useUpdateTransactionMutation();
     const { userData } = useAuthStore();
 
-    const modifiedData = data?.id ? { ...data, customerId: Number(data?.customer?.id), availablePoints: data?.customer?.customer_token_point?.points } : initialValues;
+    const modifiedData = data?.id ?
+        {
+            ...data,
+            customerId: Number(data?.customer?.id),
+            availablePoints: data?.customer?.customer_token_point?.points
+        } :
+        {
+            ...initialValues,
+            ...(data?.customerId ? { customerId: data?.customerId } : {}),
+            ...(data?.availablePoints ? { availablePoints: data?.availablePoints } : {})
+        };
+        
     const form = useForm({
         mode: 'uncontrolled',
         initialValues: modifiedData,
@@ -65,6 +76,8 @@ const TransactionForm = ({ data, close, toggleLoading }) => {
             addTransactionMutation(values, { onSuccess: close, onError: toggleLoading });
         }
     };
+
+    console.log('form', form)
 
     return (
         <form
