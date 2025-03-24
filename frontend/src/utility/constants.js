@@ -2,12 +2,13 @@ import { lazy } from "react"
 const HomeLayout = lazy(() => import("../components/layouts/Homelayout/HomeLayout"))
 const Login = lazy(() => import("../pages/Login/Login"))
 const ForgotPassword = lazy(() => import("../pages/ForgotPassword/ForgotPassword"))
-const DashBoard = lazy(() => import("../pages/DashBoard/DashBoard"))
+// const DashBoard = lazy(() => import("../pages/DashBoard/DashBoard"))
 const Customer = lazy(() => import("../pages/Customer/Customer"))
 const Hotel = lazy(() => import("../pages/Hotel/Hotel"))
 const Transaction = lazy(() => import("../pages/Transaction/Transaction"))
 const TokenRange = lazy(() => import("../pages/TokenRange/TokenRange"))
 const HotelSetting = lazy(() => import("../pages/HotelSetting/HotelSetting"))
+const Users = lazy(() => import("../pages/Users/Users"))
 
 import {
     // IconAdjustments,
@@ -61,6 +62,11 @@ export const paths = {
                     element: HotelSetting,
                     permissionKey: "hotelSetting"
                 },
+                User: {
+                    path: "/users",
+                    element: Users,
+                    permissionKey: "users"
+                },
             }
         }
     }
@@ -72,6 +78,7 @@ export const sideBarMenu = [
     { label: 'Hotels', icon: IconBuilding, link: '/hotels', permissionKey: "hotel" },
     { label: 'Transaction logs', icon: IconReceiptRupee, link: '/transaction', permissionKey: "transaction" },
     { label: 'Settings', icon: IconReceiptRupee, link: '/hotelSetting', permissionKey: "hotelSetting" },
+    { label: 'Users', icon: IconReceiptRupee, link: '/users', permissionKey: "users" },
     // {
     //     label: 'Settings',
     //     permissionKey: "settings",

@@ -67,7 +67,8 @@ exports.fetchAllUsers = async (query) => {
     return {  
         statusCode: 200, 
         message: 'Users Fetched Successfully',
-        data: fetchUsers
+        total: fetchUsers.count,
+        data: fetchUsers.rows
     };
 }
 

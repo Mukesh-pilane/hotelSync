@@ -1,6 +1,8 @@
 export const LOGIN = 'auth/log-in'
 export const LOGUT = 'auth/logout'
 export const CUSTOMER = 'customer'
+export const USER = 'user'
+export const ROLE = 'role'
 export const HOTEL = 'hotel'
 export const TRANSACTION = 'customer/transaction'
 export const TOKENRANGE = 'tokenRange'

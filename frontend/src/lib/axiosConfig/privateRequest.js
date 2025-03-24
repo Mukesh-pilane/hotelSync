@@ -31,7 +31,6 @@ const responseHandler = (response) => {
 };
 
 const errorHandler = (error) => {
-
   return Promise.reject(error);
 };
 
@@ -44,10 +43,10 @@ const responseErrorHandler = (error) => {
     switch (status) {
       case 401:
         showErrorNotification(`Error ${status}`, "Token Expired! Please Login again")
-        setTimeout(() => {
-          window.location = '/';
-          clearToken()
-        }, 1000)
+        // setTimeout(() => {
+        //   window.location = '/';
+        //   clearToken()
+        // }, 1000)
         break;
       case 400:
         showErrorNotification(`Error ${status}`, message || "Inavalid Input/ Bad Request")
